@@ -334,6 +334,9 @@ void W_Precache()
 	// Styer Scout
 	UTIL_PrecacheOtherWeapon("weapon_scout");
 
+	// Desert Eagle
+	UTIL_PrecacheOtherWeapon("weapon_deagle");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons

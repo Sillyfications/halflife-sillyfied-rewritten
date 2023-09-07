@@ -1370,3 +1370,37 @@ class CScout : public CBasePlayerWeapon
 
 	int m_iShell;
 };
+
+// anim order
+enum deagle_e
+{
+	DEAGLE_IDLE,
+	DEAGLE_RELOAD,
+	DEAGLE_DRAW,
+	DEAGLE_SHOOT1,
+	DEAGLE_SHOOT2,
+	DEAGLE_SHOOT3,
+};
+
+class CDeagle : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
