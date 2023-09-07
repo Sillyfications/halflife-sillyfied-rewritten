@@ -20,7 +20,7 @@
 #pragma once
 
 constexpr int MAX_PLAYERS = 32;
-#define MAX_WEAPONS 64 // ???
+#define MAX_WEAPONS 45 // ???
 
 #define MAX_WEAPON_SLOTS 9 // hud item selection slots
 #define MAX_ITEM_TYPES 8 
@@ -62,7 +62,7 @@ enum WeaponId
 	WEAPON_ELITE,
 	WEAPON_DBARREL,
 	WEAPON_SCOUT,
-	WEAPON_DEAGLE,
+	WEAPON_DEAGLE, 
 
 	WEAPON_SUIT = 31
 };
