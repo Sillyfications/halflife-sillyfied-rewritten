@@ -141,6 +141,7 @@ cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "dlls" "$(TargetName).pdb"
     <ClCompile Include="..\..\dlls\explode.cpp" />
     <ClCompile Include="..\..\dlls\famas.cpp" />
     <ClCompile Include="..\..\dlls\flyingmonster.cpp" />
+    <ClCompile Include="..\..\dlls\fnv_radio.cpp" />
     <ClCompile Include="..\..\dlls\func_break.cpp" />
     <ClCompile Include="..\..\dlls\func_tank.cpp" />
     <ClCompile Include="..\..\dlls\game.cpp" />
@@ -168,6 +169,7 @@ cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "dlls" "$(TargetName).pdb"
     <ClCompile Include="..\..\dlls\items.cpp" />
     <ClCompile Include="..\..\dlls\leech.cpp" />
     <ClCompile Include="..\..\dlls\lights.cpp" />
+    <ClCompile Include="..\..\dlls\m16.cpp" />
     <ClCompile Include="..\..\dlls\maprules.cpp" />
     <ClCompile Include="..\..\dlls\monstermaker.cpp" />
     <ClCompile Include="..\..\dlls\monsters.cpp" />

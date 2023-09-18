@@ -337,6 +337,12 @@ void W_Precache()
 	// Desert Eagle
 	UTIL_PrecacheOtherWeapon("weapon_deagle");
 
+	// Fallout New Vegas Radio
+	UTIL_PrecacheOtherWeapon("weapon_radio");
+
+	// M16
+	UTIL_PrecacheOtherWeapon("weapon_m16");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons

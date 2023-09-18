@@ -69,6 +69,8 @@ CElite g_Elite;
 CDB g_DB;
 CScout g_Scout;
 CDeagle g_Deagle;
+CRadio g_Radio;
+CM16 g_M16;
 /*
 ======================
 AlertMessage
@@ -472,6 +474,9 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_DB, &player);
 	HUD_PrepEntity(&g_Scout, &player);
 	HUD_PrepEntity(&g_Deagle, &player);
+	HUD_PrepEntity(&g_Radio, &player);
+	HUD_PrepEntity(&g_M16, &player);
+		
 }
 
 /*
@@ -613,6 +618,14 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 
 	case WEAPON_DEAGLE:
 		pWeapon = &g_Deagle;
+		break;
+
+	case WEAPON_RADIO:
+		pWeapon = &g_Radio;
+		break;
+
+	case WEAPON_M16:
+		pWeapon = &g_M16;
 		break;
 	}
 

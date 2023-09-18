@@ -1094,10 +1094,10 @@ void CBasePlayer::WaterMove()
 			{
 				// take drowning damage
 				pev->dmg += 1;
-				if (pev->dmg > 5)
-					pev->dmg = 5;
+				if (pev->dmg > 1)//5
+					pev->dmg = 1;//5
 				TakeDamage(CWorld::World->pev, CWorld::World->pev, pev->dmg, DMG_DROWN);
-				pev->pain_finished = gpGlobals->time + 1;
+				pev->pain_finished = gpGlobals->time + 0.3;
 
 				// track drowning damage, give it back when
 				// player finally takes a breath
@@ -2002,7 +2002,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 		return;
 
 	// only check for time based damage approx. every 2 seconds
-	if (fabs(gpGlobals->time - m_tbdPrev) < 2.0)
+	if (fabs(gpGlobals->time - m_tbdPrev) < 0.5)
 		return;
 
 	m_tbdPrev = gpGlobals->time;
@@ -2035,7 +2035,7 @@ void CBasePlayer::CheckTimeBasedDamage()
 				// after the player has been drowning and finally takes a breath
 				if (m_idrowndmg > m_idrownrestored)
 				{
-					int idif = V_min(m_idrowndmg - m_idrownrestored, 10);
+					int idif = V_min(m_idrowndmg - m_idrownrestored, 1);
 
 					TakeHealth(idif, DMG_GENERIC);
 					m_idrownrestored += idif;

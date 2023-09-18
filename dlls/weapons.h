@@ -93,7 +93,7 @@ public:
 #define _357_MAX_CARRY 36
 #define BUCKSHOT_MAX_CARRY 125
 #define BOLT_MAX_CARRY 50
-#define ROCKET_MAX_CARRY 5
+#define ROCKET_MAX_CARRY 10
 #define HANDGRENADE_MAX_CARRY 10
 #define SATCHEL_MAX_CARRY 5
 #define TRIPMINE_MAX_CARRY 5
@@ -107,7 +107,7 @@ public:
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
 #define GLOCK_MAX_CLIP 17
 #define PYTHON_MAX_CLIP 6
-#define MP5_MAX_CLIP 50
+#define MP5_MAX_CLIP 35
 #define MP5_DEFAULT_AMMO 25
 #define SHOTGUN_MAX_CLIP 5
 #define CROSSBOW_MAX_CLIP 5
@@ -1403,4 +1403,71 @@ class CDeagle : public CBasePlayerWeapon
 	}
 
 	int m_iShell;
+};
+
+// anim order
+enum radio_e
+{
+	RADIO_IDLE,
+	RADIO_DRAW,
+	RADIO_SHOOT1,
+};
+
+class CRadio : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
+
+// anim order
+enum m16_e
+{
+	M16_IDLE,
+	M16_RELOAD,
+	M16_DRAW,
+	M16_SHOOT1,
+	M16_SHOOT2,
+	M16_SWING,
+};
+
+class CM16: public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void SecondaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+	int m_iMag;
 };

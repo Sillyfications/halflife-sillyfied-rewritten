@@ -308,7 +308,7 @@ void CRpg::Reload()
 
 	if (m_iClip == 0)
 	{
-		const bool iResult = DefaultReload(RPG_MAX_CLIP, RPG_RELOAD, 2);
+		const bool iResult = DefaultReload(RPG_MAX_CLIP, RPG_RELOAD, 3.7);
 
 		if (iResult)
 			m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat(m_pPlayer->random_seed, 10, 15);

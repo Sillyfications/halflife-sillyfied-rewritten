@@ -336,6 +336,12 @@
     <ClCompile Include="..\..\dlls\deagle.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dlls\fnv_radio.cpp">
+      <Filter>Source Files\_hl\dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\m16.cpp">
+      <Filter>Source Files\_hl\dlls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cl_dll\kbutton.h">

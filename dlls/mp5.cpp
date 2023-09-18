@@ -138,7 +138,7 @@ void CMP5::PrimaryAttack()
 	else
 	{
 		// single player spread
-		vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_3DEGREES, 8192, BULLET_PLAYER_MP5, 2, 0, m_pPlayer->pev, m_pPlayer->random_seed);
+		vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8192, BULLET_PLAYER_MP5, 2, 0, m_pPlayer->pev, m_pPlayer->random_seed);
 	}
 
 	int flags;
@@ -157,7 +157,7 @@ void CMP5::PrimaryAttack()
 	m_flNextPrimaryAttack = GetNextAttackDelay(0.1);
 
 	if (m_flNextPrimaryAttack < UTIL_WeaponTimeBase())
-		m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.1;
+		m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.08;//750
 
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat(m_pPlayer->random_seed, 10, 15);
 }
@@ -221,7 +221,7 @@ void CMP5::Reload()
 	if (m_pPlayer->ammo_9mm <= 0)
 		return;
 
-	DefaultReload(MP5_MAX_CLIP, MP5_RELOAD, 1.5);
+	DefaultReload(MP5_MAX_CLIP, MP5_RELOAD, 3.4);
 }
 
 
