@@ -1471,3 +1471,71 @@ class CM16: public CBasePlayerWeapon
 	int m_iShell;
 	int m_iMag;
 };
+
+// anim order
+enum g3_e
+{
+	G3_IDLE,
+	G3_SHOOT1,
+	G3_SHOOT2,
+	G3_RELOAD,
+	G3_DRAW,
+};
+
+class CG3 : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
+
+// anim order
+enum g36_e
+{
+	G36_IDLE,
+	G36_SHOOT1,
+	G36_SHOOT2,
+	G36_SHOOT3,
+	G36_RELOAD,
+	G36_DRAW,
+};
+
+class CG36 : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void SecondaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};

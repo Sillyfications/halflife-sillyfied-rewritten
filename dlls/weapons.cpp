@@ -343,6 +343,12 @@ void W_Precache()
 	// M16
 	UTIL_PrecacheOtherWeapon("weapon_m16");
 
+	// G3
+	UTIL_PrecacheOtherWeapon("weapon_g3");
+
+	// G36
+	UTIL_PrecacheOtherWeapon("weapon_g36");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons

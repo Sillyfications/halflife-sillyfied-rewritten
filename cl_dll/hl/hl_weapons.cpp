@@ -71,6 +71,9 @@ CScout g_Scout;
 CDeagle g_Deagle;
 CRadio g_Radio;
 CM16 g_M16;
+CG3 g_G3;
+CG36 g_G36;
+
 /*
 ======================
 AlertMessage
@@ -476,6 +479,8 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_Deagle, &player);
 	HUD_PrepEntity(&g_Radio, &player);
 	HUD_PrepEntity(&g_M16, &player);
+	HUD_PrepEntity(&g_G3, &player);
+	HUD_PrepEntity(&g_G36, &player);
 		
 }
 
@@ -627,7 +632,15 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 	case WEAPON_M16:
 		pWeapon = &g_M16;
 		break;
+
+	case WEAPON_G3:
+		pWeapon = &g_G3;
+		break;
+	case WEAPON_G36:
+		pWeapon = &g_G36;
+		break;
 	}
+	
 
 	// Store pointer to our destination entity_state_t so we can get our origin, etc. from it
 	//  for setting up events on the client
