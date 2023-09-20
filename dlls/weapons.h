@@ -1411,6 +1411,8 @@ enum radio_e
 	RADIO_IDLE,
 	RADIO_DRAW,
 	RADIO_SHOOT1,
+	RADIO_SHOOT2,
+	RADIO_RELOAD
 };
 
 class CRadio : public CBasePlayerWeapon
@@ -1421,6 +1423,7 @@ class CRadio : public CBasePlayerWeapon
 	int iItemSlot() override { return 3; }
 	bool GetItemInfo(ItemInfo* p) override;
 	void PrimaryAttack() override;
+	void SecondaryAttack() override;
 	void Reload() override;
 	bool Deploy() override;
 	void WeaponIdle() override;

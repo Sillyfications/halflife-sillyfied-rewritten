@@ -51,6 +51,7 @@ bool CG36::GetItemInfo(ItemInfo* p)
 bool CG36::Deploy()
 {
 	//  The last parameter is the animation set for the player model in thirdperson to use
+	ClientPrint(m_pPlayer->pev,HUD_PRINTCENTER, "Press Primary Attack to shoot the G36.\nPress Secondary Attack to use the \nattached scope.");
 	return DefaultDeploy("models/v_g36.mdl", "models/p_g36.mdl", G36_DRAW, "mp5");
 	m_pPlayer->m_iFOV = 0;
 }

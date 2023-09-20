@@ -1,3 +1,9 @@
+//HALF-LIFE: Sillyfied weapon code
+//Fallout New Vegas Radio
+//This radio tries to connect to the broadcasting stations in the Mojave Wasteland.
+//This weapon is classified as an equipment, since it does not do any damage.
+
+
 #include "extdll.h"
 #include "util.h"
 #include "cbase.h"
@@ -15,8 +21,8 @@ void CRadio::Spawn()
 	Precache();
 	SET_MODEL(ENT(pev), "models/w_radio.mdl");
 	m_iId = WEAPON_RADIO;
-	m_iDefaultAmmo = -1; // How much ammo this weapon has on spawn
-	FallInit();			 // get ready to fall down.
+	m_iDefaultAmmo = -1; // this doesnt use ammo, because it doesnt shoot anything????
+	FallInit();			 // gravity bitch!
 }
 
 void CRadio::Precache()
@@ -26,8 +32,11 @@ void CRadio::Precache()
 	PRECACHE_MODEL("models/p_radio.mdl");
 
 
-
+	// the songs do not play via code due to not being dynamic... dynamic sounds DO work on the QC file that the MDL model comes with
 	PRECACHE_SOUND("weapons/radiosong.wav");
+	PRECACHE_SOUND("weapons/radiosong2.wav");
+	PRECACHE_SOUND("weapons/radiosong3.wav");
+
 }
 
 bool CRadio::GetItemInfo(ItemInfo* p)
@@ -50,16 +59,20 @@ bool CRadio::GetItemInfo(ItemInfo* p)
 bool CRadio::Deploy()
 {
 	//  The last parameter is the animation set for the player model in thirdperson to use
-	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Searching Uplink... Connected to Uplink...");
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Searching nearby frequencies.... 2 found....");
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, ">Press Primary Attack to communicate to 932.95 UTF.");
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, ">Press Secondary Attack to communicate to 314.28 UTF.");
 	return DefaultDeploy("models/v_radio.mdl", "models/p_radio.mdl", RADIO_DRAW, "snark");
 	
 }
 
+
+//this plays Heartaches by the Number
 void CRadio::PrimaryAttack()
 {
 
 
-	// Size of the muzzle flash and how much volume in the world the firing sound produces
+	// i dont know if i have to remove part or not, just keeping it just in case bleh 
 	m_pPlayer->m_iWeaponVolume = NORMAL_GUN_VOLUME;
 	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
 	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_LIGHT;
@@ -72,18 +85,50 @@ void CRadio::PrimaryAttack()
 	Vector vecDir = m_pPlayer->FireBulletsPlayer(0, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, -1, BULLET_PLAYER_MP5,
 		1, 0, m_pPlayer->pev, m_pPlayer->random_seed);
 
-	// Play view model animation and firing sound
+	// play viewmodel anim
 	SendWeaponAnim(RADIO_SHOOT1);
 	
-	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Attempting to upload... Communicating to 932.95 UTF...");
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Attempting to request data... Communicating to 932.95 UTF...");
 	
 
-	// Next time for attack and weapon idling
-	m_flNextPrimaryAttack = 60; // 75 rpm
-	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Uplink reset... Upload cooldown 60 seconds...");
+	
+	m_flNextPrimaryAttack = 30;//to prevent song overlap
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Connected! Playing \"Heartaches by the Number\" in 5 seconds.");
 	m_flTimeWeaponIdle = 120;
 }
 
+// this plays Lone Star
+void CRadio::SecondaryAttack()
+{
+
+
+	// i dont know if i have to remove part or not, just keeping it just in case
+	m_pPlayer->m_iWeaponVolume = NORMAL_GUN_VOLUME;
+	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
+	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_LIGHT;
+
+	// player "shoot" animation
+	m_pPlayer->SetAnimation(PLAYER_ATTACK1);
+
+	Vector vecSrc = m_pPlayer->GetGunPosition();
+	Vector vecAiming = m_pPlayer->GetAutoaimVector(0.5);
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(0, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, -1, BULLET_PLAYER_MP5,
+		1, 0, m_pPlayer->pev, m_pPlayer->random_seed);
+
+	// play viewmodel anim 
+	SendWeaponAnim(RADIO_SHOOT2);
+
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Attempting to request data... Communicating to 314.28 UTF...");
+
+	m_flNextSecondaryAttack = 30; // to prevent song overlap
+	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Connected! Playing \"Let's Ride Into The Sunset Together\" in 5 seconds..");
+	m_flTimeWeaponIdle = 120;
+}
+
+// this plays Let's Ride Into The Sunset Together
+// this doesnt actually reload the gun, just a clever hack to not add a new attack button
+// the old tuts doesnt support this verson of the code, which THIS SUCKS!!!
+//code didnt work FUCK YOU GO KILL YOURSELF
 void CRadio::Reload()
 {
 	return;
