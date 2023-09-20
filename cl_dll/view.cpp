@@ -5,7 +5,7 @@
 #include "cvardef.h"
 #include "usercmd.h"
 #include "const.h"
-
+#include "discord_manager.h"
 #include "entity_state.h"
 #include "cl_entity.h"
 #include "ref_params.h"
@@ -1738,6 +1738,10 @@ V_Init
 */
 void V_Init()
 {
+	// doiscod stuff
+	gEngfuncs.Con_Printf("Starting up Discord RPC...\n");
+	DiscordMan_Startup();
+
 	gEngfuncs.pfnAddCommand("centerview", V_StartPitchDrift);
 
 	scr_ofsx = gEngfuncs.pfnRegisterVariable("scr_ofsx", "0", 0);

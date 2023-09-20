@@ -25,7 +25,7 @@
 //#include "vgui_schememanager.h"
 
 #include "pm_shared.h"
-
+#include "discord_manager.h"
 #include <string.h>
 #include "vgui_int.h"
 
@@ -246,6 +246,7 @@ void DLLEXPORT HUD_Frame(double time)
 	//	RecClHudFrame(time);
 
 	GetClientVoiceMgr()->Frame(time);
+	DiscordMan_Update();
 }
 
 

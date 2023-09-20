@@ -17,11 +17,14 @@
 #include <string.h>
 #include <ctype.h>
 #include "Exports.h"
-
+#include "discord_manager.h"
 #include "vgui_TeamFortressViewport.h"
 #include "filesystem_utils.h"
-
-
+//discord stuff starts here
+cvar_t* rpc_chapter;
+cvar_t* rpc_area;
+cvar_t* rpc_image;
+//discord stuff ends here
 extern bool g_iAlive;
 
 extern int g_weaponselect;
@@ -34,6 +37,7 @@ void IN_Init();
 void IN_Move(float frametime, usercmd_t* cmd);
 void IN_Shutdown();
 void V_Init();
+
 void VectorAngles(const float* forward, float* angles);
 int CL_ButtonBits(bool);
 
@@ -989,6 +993,12 @@ void InitInput()
 	m_forward = gEngfuncs.pfnRegisterVariable("m_forward", "1", FCVAR_ARCHIVE);
 	m_side = gEngfuncs.pfnRegisterVariable("m_side", "0.8", FCVAR_ARCHIVE);
 
+	// init for discord vars
+	gEngfuncs.Con_Printf("Initializing Discord cilent variables...\n");
+	rpc_chapter = gEngfuncs.pfnRegisterVariable("rpc_chapter", "", FCVAR_CLIENTDLL);
+	rpc_area = gEngfuncs.pfnRegisterVariable("rpc_area", "", FCVAR_CLIENTDLL);
+	rpc_image = gEngfuncs.pfnRegisterVariable("rpc_image", "", FCVAR_CLIENTDLL);
+
 	// Initialize third person camera controls.
 	CAM_Init();
 	// Initialize inputs
@@ -1017,6 +1027,10 @@ void CL_UnloadParticleMan();
 void DLLEXPORT HUD_Shutdown()
 {
 	//	RecClShutdown();
+
+	// discord 
+	gEngfuncs.Con_Printf("Killing the Discord RPC process...");
+	DiscordMan_Kill();
 
 	ShutdownInput();
 

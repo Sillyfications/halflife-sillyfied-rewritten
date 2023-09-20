@@ -64,6 +64,9 @@
     <Filter Include="Source Files\cl_dll\particleman">
       <UniqueIdentifier>{7085339d-2b33-4cdf-846c-0e4c7d33add8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\discord">
+      <UniqueIdentifier>{ade9b1b2-1370-4a21-a031-1332a9178d12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\crossbow.cpp">
@@ -348,6 +351,9 @@
     <ClCompile Include="..\..\dlls\g36.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cl_dll\discord_manager.cpp">
+      <Filter>Source Files\cl_dll</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cl_dll\kbutton.h">
@@ -622,6 +628,15 @@
     </ClInclude>
     <ClInclude Include="..\..\cl_dll\particleman\CBaseParticle.h">
       <Filter>Header Files\cl_dll\particleman</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cl_dll\discord\discord_register.h">
+      <Filter>Source Files\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cl_dll\discord\discord_rpc.h">
+      <Filter>Source Files\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cl_dll\discord_manager.h">
+      <Filter>Source Files\cl_dll</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
