@@ -127,6 +127,10 @@ void CG36::SecondaryAttack()
 
 void CG36::Reload()
 {
+	if (m_pPlayer->m_iFOV != 0)
+	{
+		m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+	}
 	DefaultReload(100, G36_RELOAD, 3.9);
 }
 

@@ -1,3 +1,6 @@
+//Half-Life: Sillyfied weapon file
+// Anti Materiel Rifle (shortened to AMR)
+
 #include "extdll.h"
 #include "util.h"
 #include "cbase.h"
@@ -8,52 +11,52 @@
 #include "gamerules.h"
 #include "UserMessages.h"
 
-LINK_ENTITY_TO_CLASS(weapon_elite, CElite);
+LINK_ENTITY_TO_CLASS(weapon_amr, CAMR);
 
-void CElite::Spawn()
+void CAMR::Spawn()
 {
 	Precache();
-	SET_MODEL(ENT(pev), "models/w_elite.mdl");
-	m_iId = WEAPON_ELITE;
-	m_iDefaultAmmo = 30; // How much ammo this weapon has on spawn
+	SET_MODEL(ENT(pev), "models/w_amr.mdl");
+	m_iId = WEAPON_AMR;
+	m_iDefaultAmmo = 3; // How much ammo this weapon has on spawn
 	FallInit();			 // get ready to fall down.
 }
 
-void CElite::Precache()
+void CAMR::Precache()
 {
-	PRECACHE_MODEL("models/v_elite.mdl");
-	PRECACHE_MODEL("models/w_elite.mdl");
-	PRECACHE_MODEL("models/p_elite.mdl");
+	PRECACHE_MODEL("models/v_amr.mdl");
+	PRECACHE_MODEL("models/w_amr.mdl");
+	PRECACHE_MODEL("models/p_amr.mdl");
 
-	m_iShell = PRECACHE_MODEL("models/shell.mdl"); // brass shell
+	m_iShell = PRECACHE_MODEL("models/50bmg.mdl"); // brass shell
 
-	PRECACHE_SOUND("weapons/elite.wav");
+	PRECACHE_SOUND("weapons/amr.wav");
 }
 
-bool CElite::GetItemInfo(ItemInfo* p)
+bool CAMR::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "22"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 250;	 // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = "50bmg"; // Which ammo type this weapon use
+	p->iMaxAmmo1 = 21;	   // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
-	p->iMaxClip = 50; // How many ammo this weapon's clip or magazine has
-	p->iSlot = 1;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
-	p->iPosition = 2; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
+	p->iMaxClip = 3; // How many ammo this weapon's clip or magazine has
+	p->iSlot = 5;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
+	p->iPosition = 6; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
 	p->iFlags = 0;	  // Special flags this weapon has
-	p->iId = m_iId = WEAPON_ELITE;
+	p->iId = m_iId = WEAPON_AMR;
 	p->iWeight = MP5_WEIGHT; // How much "priority" this weapon has when auto-switch is triggered
 
 	return true;
 }
 
-bool CElite::Deploy()
+bool CAMR::Deploy()
 {
 	//  The last parameter is the animation set for the player model in thirdperson to use
-	return DefaultDeploy("models/v_elite.mdl", "models/p_elite.mdl", ELITE_DRAW, "glock");
+	return DefaultDeploy("models/v_amr.mdl", "models/p_amr.mdl", AMR_DRAW, "crossbow");
 }
 
-void CElite::PrimaryAttack()
+void CAMR::PrimaryAttack()
 {
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
@@ -81,13 +84,13 @@ void CElite::PrimaryAttack()
 
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
-	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
-		1, 4, m_pPlayer->pev, m_pPlayer->random_seed);
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_357,
+		1, 300, m_pPlayer->pev, m_pPlayer->random_seed);
 
 	// Play view model animation and firing sound
-	SendWeaponAnim(ELITE_SHOOT1 + RANDOM_LONG(0, 2));
-	EMIT_SOUND(edict(), CHAN_AUTO, "weapons/elite.wav", 1, ATTN_NORM);
-	
+	SendWeaponAnim(AMR_SHOOT1 + RANDOM_LONG(0, 1));
+	EMIT_SOUND(edict(), CHAN_AUTO, "weapons/amr.wav", 1, ATTN_NORM);
+
 
 	// Eject the brass
 	Vector vecShellVelocity = m_pPlayer->pev->velocity + gpGlobals->v_right * RANDOM_FLOAT(100, 200) +
@@ -97,23 +100,45 @@ void CElite::PrimaryAttack()
 		vecShellVelocity, pev->angles.y, m_iShell, TE_BOUNCE_SHELL);
 
 	// Punch the camera to simulate recoil
-	m_pPlayer->pev->punchangle.x -= 1.8;
+	m_pPlayer->pev->punchangle.x -= 10;
 	// Remove a bullet
-	
+
 	m_iClip--;
 	// Next time for attack and weapon idling
-	m_flNextPrimaryAttack = 0.095;//300
-	m_flTimeWeaponIdle = 2;
+	m_flNextPrimaryAttack = 4; // 300
+	m_flTimeWeaponIdle = 5;
 }
 
-void CElite::Reload()
+void CAMR::SecondaryAttack()
 {
-	// Reload 30 bullets, play the AK47_RELOAD animation, reload duration is 2.5 seconds
-	DefaultReload(50, ELITE_RELOAD, 3.5);
+	{
+		if (m_pPlayer->m_iFOV != 0)
+		{
+			m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		}
+		else if (m_pPlayer->m_iFOV != 30)
+		{
+			m_pPlayer->m_iFOV = 30;
+		}
+
+		pev->nextthink = UTIL_WeaponTimeBase() + 0.1;
+		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.0;
+	}
 }
 
 
-void CElite::WeaponIdle()
+void CAMR::Reload()
+{
+	if (m_pPlayer->m_iFOV != 0)
+	{
+		m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+	}
+	// Reload 30 bullets, play the AK47_RELOAD animation, reload duration is 2.5 seconds
+	DefaultReload(3, AMR_RELOAD, 7.4);
+}
+
+
+void CAMR::WeaponIdle()
 {
 	ResetEmptySound();
 
@@ -122,5 +147,5 @@ void CElite::WeaponIdle()
 		return;
 
 	// Play idle animation
-	SendWeaponAnim(ELITE_IDLE);
+	SendWeaponAnim(AMR_IDLE);
 }

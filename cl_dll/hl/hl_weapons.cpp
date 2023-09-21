@@ -73,6 +73,7 @@ CRadio g_Radio;
 CM16 g_M16;
 CG3 g_G3;
 CG36 g_G36;
+CAMR g_AMR;
 
 /*
 ======================
@@ -481,6 +482,7 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_M16, &player);
 	HUD_PrepEntity(&g_G3, &player);
 	HUD_PrepEntity(&g_G36, &player);
+	HUD_PrepEntity(&g_AMR, &player);
 		
 }
 
@@ -638,6 +640,10 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 		break;
 	case WEAPON_G36:
 		pWeapon = &g_G36;
+		break;
+
+	case WEAPON_AMR:
+		pWeapon = &g_AMR;
 		break;
 	}
 	

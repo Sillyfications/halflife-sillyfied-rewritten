@@ -88,11 +88,11 @@ public:
 
 
 // weapon clip/carry ammo capacities
-#define URANIUM_MAX_CARRY 100
-#define _9MM_MAX_CARRY 250
-#define _357_MAX_CARRY 36
-#define BUCKSHOT_MAX_CARRY 125
-#define BOLT_MAX_CARRY 50
+#define URANIUM_MAX_CARRY 200
+#define _9MM_MAX_CARRY 156
+#define _357_MAX_CARRY 48
+#define BUCKSHOT_MAX_CARRY 49
+#define BOLT_MAX_CARRY 35
 #define ROCKET_MAX_CARRY 10
 #define HANDGRENADE_MAX_CARRY 10
 #define SATCHEL_MAX_CARRY 5
@@ -106,7 +106,7 @@ public:
 
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
 #define GLOCK_MAX_CLIP 17
-#define PYTHON_MAX_CLIP 6
+#define PYTHON_MAX_CLIP 7
 #define MP5_MAX_CLIP 35
 #define MP5_DEFAULT_AMMO 25
 #define SHOTGUN_MAX_CLIP 5
@@ -1520,6 +1520,40 @@ enum g36_e
 };
 
 class CG36 : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void SecondaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
+
+// anim order
+enum amr_e
+{
+	AMR_IDLE,
+	AMR_SHOOT1,
+	AMR_SHOOT2,
+	AMR_RELOAD,
+	AMR_DRAW,
+};
+
+class CAMR : public CBasePlayerWeapon
 {
 	void Spawn() override;
 	void Precache() override;

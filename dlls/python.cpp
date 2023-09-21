@@ -108,25 +108,19 @@ void CPython::Holster()
 
 void CPython::SecondaryAttack()
 {
-#ifdef CLIENT_DLL
-	if (!bIsMultiplayer())
-#else
-	if (!g_pGameRules->IsMultiplayer())
-#endif
 	{
-		return;
-	}
+		if (m_pPlayer->m_iFOV != 0)
+		{
+			m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		}
+		else if (m_pPlayer->m_iFOV != 40)
+		{
+			m_pPlayer->m_iFOV = 40;
+		}
 
-	if (m_pPlayer->m_iFOV != 0)
-	{
-		m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+		pev->nextthink = UTIL_WeaponTimeBase() + 0.1;
+		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.5;
 	}
-	else if (m_pPlayer->m_iFOV != 40)
-	{
-		m_pPlayer->m_iFOV = 40;
-	}
-
-	m_flNextSecondaryAttack = 0.5;
 }
 
 void CPython::PrimaryAttack()
@@ -198,13 +192,8 @@ void CPython::Reload()
 	}
 
 	bool bUseScope = false;
-#ifdef CLIENT_DLL
-	bUseScope = bIsMultiplayer();
-#else
-	bUseScope = g_pGameRules->IsMultiplayer();
-#endif
 
-	DefaultReload(6, PYTHON_RELOAD, 2.0, bUseScope ? 1 : 0);
+	DefaultReload(7, PYTHON_RELOAD, 4.0, bUseScope ? 1 : 0);
 }
 
 

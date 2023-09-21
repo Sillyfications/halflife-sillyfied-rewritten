@@ -67,6 +67,7 @@ enum WeaponId
 	WEAPON_M16,
 	WEAPON_G3,
 	WEAPON_G36,
+	WEAPON_AMR,
 
 
 	WEAPON_SUIT = 31

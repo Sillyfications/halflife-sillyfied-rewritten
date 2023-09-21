@@ -34,7 +34,7 @@ bool CScout::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
 	p->pszAmmo1 = "3006"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 30;	  // What's the max ammo quantity for that kind of ammo
+	p->iMaxAmmo1 = 50;	  // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
 	p->iMaxClip = 10; // How many ammo this weapon's clip or magazine has
@@ -82,7 +82,7 @@ void CScout::PrimaryAttack()
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
 	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_MP5,
-		1, 125, m_pPlayer->pev, m_pPlayer->random_seed);
+		1, 100, m_pPlayer->pev, m_pPlayer->random_seed);
 
 	// Play view model animation and firing sound
 	SendWeaponAnim(SCOUT_SHOOT1 + RANDOM_LONG(0, 2));

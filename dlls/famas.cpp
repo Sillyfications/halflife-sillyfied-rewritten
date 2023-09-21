@@ -81,8 +81,8 @@ void CFamas::PrimaryAttack()
 
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
-	Vector vecDir = m_pPlayer->FireBulletsPlayer(3, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
-		1, 6, m_pPlayer->pev, m_pPlayer->random_seed);
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(5, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
+		1, 4, m_pPlayer->pev, m_pPlayer->random_seed);
 
 	// Play view model animation and firing sound
 	SendWeaponAnim(FAMAS_SHOOT1 + RANDOM_LONG(0, 2));
@@ -96,11 +96,11 @@ void CFamas::PrimaryAttack()
 		vecShellVelocity, pev->angles.y, m_iShell, TE_BOUNCE_SHELL);
 
 	// Punch the camera to simulate recoil
-	m_pPlayer->pev->punchangle.x -= 2.4;
+	m_pPlayer->pev->punchangle.x -= 1;
 	// Remove a bullet
 	m_iClip--;
 	// Next time for attack and weapon idling
-	m_flNextPrimaryAttack = 0.09;
+	m_flNextPrimaryAttack = 0.12;
 	m_flTimeWeaponIdle = 2;
 }
 

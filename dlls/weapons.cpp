@@ -349,6 +349,9 @@ void W_Precache()
 	// G36
 	UTIL_PrecacheOtherWeapon("weapon_g36");
 
+	// Anti Materiel Rifle
+	UTIL_PrecacheOtherWeapon("weapon_amr");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons
