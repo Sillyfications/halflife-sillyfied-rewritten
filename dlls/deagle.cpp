@@ -36,8 +36,8 @@ void CDeagle::Precache()
 bool CDeagle::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "357"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = _357_MAX_CARRY;	 // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = ".50 AE"; // Which ammo type this weapon use
+	p->iMaxAmmo1 = 32;	 // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
 	p->iMaxClip = 9;  // How many ammo this weapon's clip or magazine has
@@ -84,8 +84,8 @@ void CDeagle::PrimaryAttack()
 
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
-	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_3DEGREES, 8192, BULLET_PLAYER_MP5,
-		1, 25, m_pPlayer->pev, m_pPlayer->random_seed); // dam 23 > 25 (+2) acc 5 > 3 (+2)
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_2DEGREES, 8192, BULLET_PLAYER_MP5,
+		1, 60, m_pPlayer->pev, m_pPlayer->random_seed); // dam 23 > 25 (+2) acc 5 > 3 (+2)
 
 	// Play view model animation and firing sound
 	SendWeaponAnim(DEAGLE_SHOOT1 + RANDOM_LONG(0, 2));

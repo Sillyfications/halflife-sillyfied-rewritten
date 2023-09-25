@@ -40,8 +40,8 @@ bool CM16::GetItemInfo(ItemInfo* p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
 	p->iMaxClip = 30; // How many ammo this weapon's clip or magazine has
-	p->iSlot = 5;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
-	p->iPosition = 3; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
+	p->iSlot = 3;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
+	p->iPosition = 0; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
 	p->iFlags = 0;	  // Special flags this weapon has
 	p->iId = m_iId = WEAPON_M16;
 	p->iWeight = MP5_WEIGHT; // How much "priority" this weapon has when auto-switch is triggered

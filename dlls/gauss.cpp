@@ -86,7 +86,7 @@ bool CGauss::GetItemInfo(ItemInfo* p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = -1;
 	p->iMaxClip = WEAPON_NOCLIP;
-	p->iSlot = 3;
+	p->iSlot = 6;
 	p->iPosition = 1;
 	p->iId = m_iId = WEAPON_GAUSS;
 	p->iFlags = 0;

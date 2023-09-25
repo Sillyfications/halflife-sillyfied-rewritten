@@ -39,8 +39,8 @@ bool CDB::GetItemInfo(ItemInfo* p)
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
 	p->iMaxClip = 2;			  // 2 barrels
-	p->iSlot = 5;				  // 2 = smg, shotgun, crossbow (BUG! sprite doesn't show in game? gotta ask for help)
-	p->iPosition = 0;			  // below m40a1 scopeless		(BUG! same here)
+	p->iSlot = 4;				  // 2 = smg, shotgun, crossbow (BUG! sprite doesn't show in game? gotta ask for help)
+	p->iPosition = 1;			  // below m40a1 scopeless		(BUG! same here)
 	p->iFlags = 0;				  // no idea
 	p->iId = m_iId = WEAPON_DBARREL; // errm errm also no idea but must be important
 	p->iWeight = MP5_WEIGHT;

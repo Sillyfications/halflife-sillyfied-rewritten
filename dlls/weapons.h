@@ -140,13 +140,13 @@ public:
 
 // The amount of ammo given to a player by an ammo item.
 #define AMMO_URANIUMBOX_GIVE 20
-#define AMMO_GLOCKCLIP_GIVE GLOCK_MAX_CLIP
-#define AMMO_357BOX_GIVE PYTHON_MAX_CLIP
-#define AMMO_MP5CLIP_GIVE MP5_MAX_CLIP
+#define AMMO_GLOCKCLIP_GIVE 8
+#define AMMO_357BOX_GIVE 5
+#define AMMO_MP5CLIP_GIVE 17
 #define AMMO_CHAINBOX_GIVE 200
 #define AMMO_M203BOX_GIVE 2
-#define AMMO_BUCKSHOTBOX_GIVE 12
-#define AMMO_CROSSBOWCLIP_GIVE CROSSBOW_MAX_CLIP
+#define AMMO_BUCKSHOTBOX_GIVE 6
+#define AMMO_CROSSBOWCLIP_GIVE 3
 #define AMMO_RPGCLIP_GIVE RPG_MAX_CLIP
 #define AMMO_URANIUMBOX_GIVE 20
 #define AMMO_SNARKBOX_GIVE 5
@@ -1562,6 +1562,41 @@ class CAMR : public CBasePlayerWeapon
 	bool GetItemInfo(ItemInfo* p) override;
 	void PrimaryAttack() override;
 	void SecondaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
+
+// anim order
+enum p90_e
+{
+	P90_IDLE,
+	P90_RELOAD,
+	P90_DRAW,
+	P90_SHOOT1,
+	P90_SHOOT2,
+	P90_SHOOT3,
+	
+};
+
+class CP90 : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
 	void Reload() override;
 	bool Deploy() override;
 	void WeaponIdle() override;
