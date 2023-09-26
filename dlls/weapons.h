@@ -1611,3 +1611,41 @@ class CP90 : public CBasePlayerWeapon
 
 	int m_iShell;
 };
+
+// anim order
+enum leveraction_e
+{
+	LEVERACTION_IDLE = 0,
+	LEVERACTION_FIRE,
+	LEVERACTION_FIRE2,
+	LEVERACTION_RELOAD,
+	LEVERACTION_PUMP,
+	LEVERACTION_START_RELOAD,
+	LEVERACTION_DRAW,
+	LEVERACTION_HOLSTER,
+	LEVERACTION_IDLE4,
+	LEVERACTION_IDLE_DEEP
+};
+
+class CLeverAction : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};

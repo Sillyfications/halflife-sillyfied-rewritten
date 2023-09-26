@@ -355,6 +355,9 @@ void W_Precache()
 	// FN P90
 	UTIL_PrecacheOtherWeapon("weapon_p90");
 
+	// Unnamed Lever Action Rifle
+	UTIL_PrecacheOtherWeapon("weapon_leveraction");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons
