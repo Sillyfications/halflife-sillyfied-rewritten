@@ -358,6 +358,9 @@ void W_Precache()
 	// Unnamed Lever Action Rifle
 	UTIL_PrecacheOtherWeapon("weapon_leveraction");
 
+	// KSG Shotgun
+	UTIL_PrecacheOtherWeapon("weapon_ksg");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons

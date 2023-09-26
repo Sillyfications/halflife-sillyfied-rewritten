@@ -1649,3 +1649,41 @@ class CLeverAction : public CBasePlayerWeapon
 
 	int m_iShell;
 };
+
+// anim order
+enum ksg_e
+{
+	KSG_IDLE = 0,
+	KSG_FIRE,
+	KSG_FIRE2,
+	KSG_RELOAD,
+	KSG_PUMP,
+	KSG_START_RELOAD,
+	KSG_DRAW,
+	KSG_HOLSTER,
+	KSG_IDLE4,
+	KSG_IDLE_DEEP
+};
+
+class CKSG : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};

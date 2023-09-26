@@ -76,6 +76,7 @@ CG36 g_G36;
 CAMR g_AMR;
 CP90 g_P90;
 CLeverAction g_LeverAction;
+CKSG g_KSG;
 
 
 
@@ -489,6 +490,7 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_AMR, &player);
 	HUD_PrepEntity(&g_P90, &player);
 	HUD_PrepEntity(&g_LeverAction, &player);
+	HUD_PrepEntity(&g_KSG, &player);
 		
 }
 
@@ -659,6 +661,11 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 	case WEAPON_LEVERACTION:
 		pWeapon = &g_LeverAction;
 		break;
+
+	case WEAPON_KSG:
+		pWeapon = &g_KSG;
+		break;
+
 	}
 	
 
