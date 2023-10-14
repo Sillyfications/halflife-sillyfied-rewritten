@@ -1,5 +1,7 @@
-// Half-Life: Sillyfied weapon file
-// This file can be used as an template for shotgun based reloading custom weapons
+// Half-Life: Sillyfied
+// Custom Weapon Ammo Handler
+//This handles the ammo but the ammo type doesnt work, so it includes a very powerful dev weapon
+
 
 #include "extdll.h"
 #include "util.h"
@@ -11,54 +13,54 @@
 #include "gamerules.h"
 #include "UserMessages.h"
 
-LINK_ENTITY_TO_CLASS(weapon_ksg, CKSG);
+LINK_ENTITY_TO_CLASS(weapon_customweaponammohandler, CCustomWeaponAmmoHandler);
 
-void CKSG::Spawn()
+void CCustomWeaponAmmoHandler::Spawn()
 {
 	Precache();
 	SET_MODEL(ENT(pev), "models/w_ksg.mdl");
-	m_iId = WEAPON_KSG;
-	m_iDefaultAmmo = 18; // How much ammo this weapon has on spawn
-	FallInit();			// get ready to fall down.
+	m_iId = WEAPON_CUSTOMWEAPONAMMOHANDLER;
+	m_iDefaultAmmo = 0; // How much ammo this weapon has on spawn
+	FallInit();			 // get ready to fall down.
 }
 
-void CKSG::Precache()
+void CCustomWeaponAmmoHandler::Precache()
 {
-	PRECACHE_MODEL("models/v_ksg.mdl");
+	PRECACHE_MODEL("models/v_customweaponammohandler.mdl");
 	PRECACHE_MODEL("models/w_ksg.mdl");
 	PRECACHE_MODEL("models/p_ksg.mdl");
 
 	m_iShell = PRECACHE_MODEL("models/shotgunshell.mdl"); // brass shell
 
-	PRECACHE_SOUND("weapons/ksg.wav");
+	PRECACHE_SOUND("weapons/customweaponammohandler.wav");
 	// PRECACHE_SOUND("weapons/la/reload.wav"); no longer needed
 }
 
-bool CKSG::GetItemInfo(ItemInfo* p)
+bool CCustomWeaponAmmoHandler::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "10 gauge"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 54;		  // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = "custom weapon ammo handler"; // Which ammo type this weapon use
+	p->iMaxAmmo1 = 999;	  // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
-	p->iMaxClip = 18;  // How many ammo this weapon's clip or magazine has
-	p->iSlot = 4;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
-	p->iPosition = 3; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
+	p->iMaxClip = 50; // How many ammo this weapon's clip or magazine has
+	p->iSlot = 7;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
+	p->iPosition = 4; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
 	p->iFlags = 0;	  // Special flags this weapon has
-	p->iId = m_iId = WEAPON_KSG;
+	p->iId = m_iId = WEAPON_CUSTOMWEAPONAMMOHANDLER;
 	p->iWeight = MP5_WEIGHT; // How much "priority" this weapon has when auto-switch is triggered
 
 	return true;
 }
 
-bool CKSG::Deploy()
+bool CCustomWeaponAmmoHandler::Deploy()
 {
 	//  The last parameter is the animation set for the player model in thirdperson to use
-	return DefaultDeploy("models/v_ksg.mdl", "models/p_ksg.mdl", KSG_DRAW, "crossbow");
+	return DefaultDeploy("models/v_customweaponammohandler.mdl", "models/p_ksg.mdl", CUSTOMWEAPONAMMOHANDLER_DRAW, "crossbow");
 	m_fInSpecialReload = 0;
 }
 
-void CKSG::PrimaryAttack()
+void CCustomWeaponAmmoHandler::PrimaryAttack()
 {
 	// don't fire underwater
 	if (m_pPlayer->pev->waterlevel == 3)
@@ -94,12 +96,12 @@ void CKSG::PrimaryAttack()
 
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
-	Vector vecDir = m_pPlayer->FireBulletsPlayer(3, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
-		1, 20, m_pPlayer->pev, m_pPlayer->random_seed);
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(100, vecSrc, vecAiming, VECTOR_CONE_DOUBLE, 8192, BULLET_PLAYER_BUCKSHOT,
+		1, 200, m_pPlayer->pev, m_pPlayer->random_seed);
 
 	// Play view model animation and firing sound
-	SendWeaponAnim(KSG_FIRE);
-	EMIT_SOUND(edict(), CHAN_AUTO, "weapons/ksg.wav", 1, ATTN_NORM);
+	SendWeaponAnim(CUSTOMWEAPONAMMOHANDLER_FIRE);
+	EMIT_SOUND(edict(), CHAN_AUTO, "weapons/customweaponammohandler.wav", 1, ATTN_NORM);
 
 
 	// Eject the brass
@@ -118,12 +120,12 @@ void CKSG::PrimaryAttack()
 	// if (m_iClip != 0)
 	m_flPumpTime = gpGlobals->time + 0.5;
 	// Next time for attack and weapon idling
-	m_flNextPrimaryAttack = 1.2; // 300
-	m_flTimeWeaponIdle = 1.2;
+	m_flNextPrimaryAttack = 0.7; // 300
+	m_flTimeWeaponIdle = 0.7;
 	m_fInSpecialReload = 0;
 }
 
-// void CKSG::SecondaryAttack() // secondary attack? nuh uh its a reloading button
+// void CCustomWeaponAmmoHandler::SecondaryAttack() // secondary attack? nuh uh its a reloading button
 //{
 // if (m_iPrimaryAmmoType == 0) //check if player has actually ammo
 //{
@@ -136,20 +138,20 @@ void CKSG::PrimaryAttack()
 // }
 
 
-// DefaultReload(0, KSG_RELOAD, 1.3);// alternative option, maybe this stops with the "hold down the button to reload thing"
+// DefaultReload(0, CUSTOMWEAPONAMMOHANDLER_RELOAD, 1.3);// alternative option, maybe this stops with the "hold down the button to reload thing"
 // m_iClip++; //add one bullet to the clip
 // m_iPrimaryAmmoType--; //remove one bullet from the reserve
 // m_flNextPrimaryAttack = 1.35; // prevent player from attacking IN the reload
 // m_flNextSecondaryAttack = 1.35; // prevent player from reloading before the cooldown
-// SendWeaponAnim(KSG_RELOAD); // play reload animation
+// SendWeaponAnim(CUSTOMWEAPONAMMOHANDLER_RELOAD); // play reload animation
 // m_fInSpecialReload = 1;
 //}
 
 
-void CKSG::Reload()
+void CCustomWeaponAmmoHandler::Reload()
 {
-	// DefaultReload(1, KSG_RELOAD, 1.3);
-	if (m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 || m_iClip == 18) // checks if the weapon is full, the LA has 4 round cap
+	// DefaultReload(1, CUSTOMWEAPONAMMOHANDLER_RELOAD, 1.3);
+	if (m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 || m_iClip == 50) // checks if the weapon is full, the LA has 4 round cap
 		return;
 
 	// don't reload until recoil is done
@@ -161,10 +163,10 @@ void CKSG::Reload()
 	// check to see if we're ready to reload
 	if (m_fInSpecialReload == 0)
 	{
-		SendWeaponAnim(KSG_START_RELOAD); // starting position
+		SendWeaponAnim(CUSTOMWEAPONAMMOHANDLER_START_RELOAD); // starting position
 		m_fInSpecialReload = 1;
-		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.57; // time to for the weapon to start
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.57;
+		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.53; // time to for the weapon to start
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.53;
 		m_flNextPrimaryAttack = GetNextAttackDelay(1.0);
 		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.0;
 		return;
@@ -181,10 +183,10 @@ void CKSG::Reload()
 		//	else
 		//		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/la/reload.wav", 1, ATTN_NORM, 0, 85 + RANDOM_LONG(0, 0x1f)); //we are playing sound in the QC no need to play it here
 
-		SendWeaponAnim(KSG_RELOAD);
+		SendWeaponAnim(CUSTOMWEAPONAMMOHANDLER_RELOAD);
 		float m_flNextReload;
-		m_flNextReload = UTIL_WeaponTimeBase() + 0.357;
-		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.357;
+		m_flNextReload = UTIL_WeaponTimeBase() + 0.53;
+		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.53;
 	}
 	else
 	{
@@ -196,7 +198,7 @@ void CKSG::Reload()
 }
 
 
-void CKSG::WeaponIdle()
+void CCustomWeaponAmmoHandler::WeaponIdle()
 {
 	ResetEmptySound();
 
@@ -220,14 +222,14 @@ void CKSG::WeaponIdle()
 		}
 		else if (m_fInSpecialReload != 0)
 		{
-			if (m_iClip != 18 && 0 != m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
+			if (m_iClip != 50 && 0 != m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType])
 			{
 				Reload();
 			}
 			else
 			{
 				// reload debounce has timed out
-				SendWeaponAnim(KSG_PUMP);
+				SendWeaponAnim(CUSTOMWEAPONAMMOHANDLER_PUMP);
 
 
 				m_fInSpecialReload = 0;
@@ -240,17 +242,17 @@ void CKSG::WeaponIdle()
 			float flRand = UTIL_SharedRandomFloat(m_pPlayer->random_seed, 0, 1);
 			if (flRand <= 0.8)
 			{
-				iAnim = KSG_IDLE_DEEP;
+				iAnim = CUSTOMWEAPONAMMOHANDLER_IDLE_DEEP;
 				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (60.0 / 12.0); // * RANDOM_LONG(2, 5);
 			}
 			else if (flRand <= 0.95)
 			{
-				iAnim = KSG_IDLE;
+				iAnim = CUSTOMWEAPONAMMOHANDLER_IDLE;
 				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (20.0 / 9.0);
 			}
 			else
 			{
-				iAnim = KSG_IDLE4;
+				iAnim = CUSTOMWEAPONAMMOHANDLER_IDLE4;
 				m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + (20.0 / 9.0);
 			}
 			SendWeaponAnim(iAnim);

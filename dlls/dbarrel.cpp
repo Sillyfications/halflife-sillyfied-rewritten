@@ -1,5 +1,16 @@
 //Half-Life: Sillyfied Double Barrel Shotgun
 
+// The Lenton Arms SxS 4
+// The Lenton Arms SxS 4 is a double-barreled shotgun that does high damage, but very inaccurate. It shoots two 4 gauge shells at once. The most effective way to use this weapon are for short range only.
+// Ammo: 4 GAUGE
+// Damage: 18x13 (234)
+// Firerate: Single shot before reloading, can't measure
+// Magazine: Barrel fed, 2/10
+// DPS: 0-234
+// CND: 10 shots before malfunction
+// Accuracy: 20 degrees 
+// Recoil: 20 upwards
+
 #include "extdll.h"
 #include "util.h"
 #include "cbase.h"
@@ -18,6 +29,7 @@ void CDB::Spawn()
 	SET_MODEL(ENT(pev), "models/w_quad.mdl");
 	m_iId = WEAPON_DBARREL;
 	m_iDefaultAmmo = 2; // ammo on spawn
+	m_iSecondaryAmmoType -= 27; // reset CND
 	FallInit();
 }
 
@@ -34,10 +46,10 @@ void CDB::Precache()
 bool CDB::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "buckshot";		   // its a shotgun, of course 12G
-	p->iMaxAmmo1 = BUCKSHOT_MAX_CARRY; // 125
-	p->pszAmmo2 = NULL;
-	p->iMaxAmmo2 = NULL;
+	p->pszAmmo1 = "4 gauge";		   // its a shotgun, of course 12G
+	p->iMaxAmmo1 = 10; // 125
+	p->pszAmmo2 = "CNDDbarrel";
+	p->iMaxAmmo2 = 27;
 	p->iMaxClip = 2;			  // 2 barrels
 	p->iSlot = 4;				  // 2 = smg, shotgun, crossbow (BUG! sprite doesn't show in game? gotta ask for help)
 	p->iPosition = 1;			  // below m40a1 scopeless		(BUG! same here)
@@ -72,6 +84,12 @@ void CDB::PrimaryAttack()
 		return;
 	}
 
+	if (m_iSecondaryAmmoType == 27) // no DP... no shoot....
+	{
+		PlayEmptySound();
+		return;
+	}
+
 	// nuzzle flash and sound volume
 	m_pPlayer->m_iWeaponVolume = NORMAL_GUN_VOLUME;
 	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
@@ -82,7 +100,7 @@ void CDB::PrimaryAttack()
 
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
-	Vector vecDir = m_pPlayer->FireBulletsPlayer(18, vecSrc, vecAiming, VECTOR_CONE_DOUBLE, 8192, BULLET_PLAYER_BUCKSHOT,
+	Vector vecDir = m_pPlayer->FireBulletsPlayer(18, vecSrc, vecAiming, VECTOR_CONE_20DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
 		1, 13, m_pPlayer->pev, m_pPlayer->random_seed); // 9 per shell
 
 	// play view model animation and firing sound
@@ -96,6 +114,38 @@ void CDB::PrimaryAttack()
 	m_pPlayer->pev->punchangle.x -= 8;
 	m_iClip--;
 	m_iClip--;
+	m_iSecondaryAmmoType++;
+
+	// start weapon condition message
+	if (m_iSecondaryAmmoType == 17)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 is starting to show some wear.");
+	}
+	if (m_iSecondaryAmmoType == 19)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 has now 80 CND.");
+	}
+	if (m_iSecondaryAmmoType == 21)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 has now 60 CND.");
+	}
+	if (m_iSecondaryAmmoType == 23)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 has now 40 CND, try to find a replacement weapon or repair your current weapon.");
+	}
+	if (m_iSecondaryAmmoType == 25)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 has now 20 CND, It will malfunction soon, so try to switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 26)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 has now 10 CND, It will malfunction, Switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 27)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Lenton Arms SxS 4 is now broken. Switch to a different weapon.");
+	}
+	// end weapon condition messages
 
 	m_flNextPrimaryAttack = 0.1;
 	m_flTimeWeaponIdle = 1.85;

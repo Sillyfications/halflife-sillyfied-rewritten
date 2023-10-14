@@ -255,10 +255,22 @@ class CPythonAmmo : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		if (pOther->GiveAmmo(AMMO_357BOX_GIVE, "357", _357_MAX_CARRY) != -1)
+		if (pOther->GiveAmmo(3, "357", _357_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			return true;
+		}
+		if (pOther->GiveAmmo(4, ".50 AE", 32) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(5, "308", 50) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			return true; // adachi true! give ammo! make item disappear!
 		}
 		return false;
 	}

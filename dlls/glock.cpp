@@ -13,6 +13,7 @@
 *
 ****/
 
+
 #include "extdll.h"
 #include "util.h"
 #include "cbase.h"
@@ -26,12 +27,19 @@ LINK_ENTITY_TO_CLASS(weapon_9mmhandgun, CGlock);
 void CGlock::Spawn()
 {
 	pev->classname = MAKE_STRING("weapon_9mmhandgun"); // hack to allow for old names
+	pev->classname = MAKE_STRING("weapon_ngmsp"); // hack to allow for new names
 	Precache();
 	m_iId = WEAPON_GLOCK;
 	SET_MODEL(ENT(pev), "models/w_9mmhandgun.mdl");
 
 	m_iDefaultAmmo = GLOCK_DEFAULT_GIVE;
 
+	//ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "You picked up the Neckler and Gogh MSP\n");
+	//ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "The N&K Military Service Pistol has won multiple gunsmithing awards for\n");
+    //ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "its accuracy and durablity, due to that this weapon doesn't have CND\n");
+	//ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Ammo: 9mm | Damage: 15 | RPM: 400 | CND: None \n");
+    
+	//m_iSecondaryAmmoType -= 100;// reset when weapon pick up
 	FallInit(); // get ready to fall down.
 }
 
@@ -61,7 +69,7 @@ bool CGlock::GetItemInfo(ItemInfo* p)
 	p->pszAmmo1 = "9mm";
 	p->iMaxAmmo1 = _9MM_MAX_CARRY;
 	p->pszAmmo2 = NULL;
-	p->iMaxAmmo2 = -1;
+	p->iMaxAmmo2 = -1; //150 + 22 = game cant handle functions aboce 150, every weapon needs to be 150
 	p->iMaxClip = GLOCK_MAX_CLIP;
 	p->iSlot = 1;
 	p->iPosition = 0;
@@ -101,10 +109,65 @@ void CGlock::GlockFire(float flSpread, float flCycleTime, bool fUseAutoAim)
 		return;
 	}
 
+	//if (m_iSecondaryAmmoType == 100) // no DP... no shoot....
+	//{
+	//	PlayEmptySound();
+	//	return;
+	//}
+
 	m_iClip--;
-
+	//m_iSecondaryAmmoType++; // remove one DP
 	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
-
+	// start weapon condition message if the weapon uses 1 CND
+	//if (m_iSecondaryAmmoType == 0)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP is starting to show some wear. (100 CND).");
+	//}
+	//if (m_iSecondaryAmmoType == 10)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 90 CND. ");
+	//}
+	//if (m_iSecondaryAmmoType == 20)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 80 CND. ");
+	//}
+	//if (m_iSecondaryAmmoType == 30)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 70 CND. ");
+	//}
+	//if (m_iSecondaryAmmoType == 40)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 60 CND.");
+	//}
+	//if (m_iSecondaryAmmoType == 50)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 50 CND.");
+	//}
+	//if (m_iSecondaryAmmoType == 60)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 40 CND.");
+	//}
+	//if (m_iSecondaryAmmoType == 70)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 30 CND. ");
+	//}
+	//if (m_iSecondaryAmmoType == 80)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 20 CND, try to find a replacement weapon or repair your current weapon.");
+	//}
+	//if (m_iSecondaryAmmoType == 90)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 10 CND, It will malfunction soon, so try to switch to a different weapon.");
+	//}
+	//if (m_iSecondaryAmmoType == 95)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP has now 5 CND, It will malfunction, Switch to a different weapon.");
+	//}
+	//if (m_iSecondaryAmmoType == 100)
+	//{
+	//	ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Neckler & Gogh MSP is now broken. Switch to a different weapon.");
+	//}
+	// end weapon condition messages
 	int flags;
 
 #if defined(CLIENT_WEAPONS)
@@ -164,9 +227,9 @@ void CGlock::Reload()
 	bool iResult;
 
 	if (m_iClip == 0)
-		iResult = DefaultReload(17, GLOCK_RELOAD, 1.5);
+		iResult = DefaultReload(10, GLOCK_RELOAD, 1.5);
 	else
-		iResult = DefaultReload(17, GLOCK_RELOAD_NOT_EMPTY, 1.5);
+		iResult = DefaultReload(10, GLOCK_RELOAD_NOT_EMPTY, 1.5);
 
 	if (iResult)
 	{
@@ -232,12 +295,22 @@ class CGlockAmmo : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		if (pOther->GiveAmmo(AMMO_GLOCKCLIP_GIVE, "9mm", _9MM_MAX_CARRY) != -1)
+		if (pOther->GiveAmmo(8, "9mm", _9MM_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			return true;
+		}
+		if (pOther->GiveAmmo(25, "57", 150) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			return true; // adachi true! give ammo! make item disappear!
 		}
 		return false;
+		
+	
 	}
 };
 LINK_ENTITY_TO_CLASS(ammo_glockclip, CGlockAmmo);

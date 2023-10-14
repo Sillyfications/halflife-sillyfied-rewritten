@@ -459,7 +459,7 @@ void EV_FireGlock1(event_args_t* args)
 		V_PunchAxis(0, -2.0);
 	}
 
-	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 20, -12, 4);
+	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 22, -6, 5); // up is actually right and right is actually up.... thanks gaben...
 
 	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHELL);
 
@@ -605,7 +605,7 @@ void EV_FireShotGunSingle(event_args_t* args)
 		EV_MuzzleFlash();
 		gEngfuncs.pEventAPI->EV_WeaponAnimation(SHOTGUN_FIRE, 0);
 
-		V_PunchAxis(0, -5.0);
+		V_PunchAxis(-5, -10.0);
 	}
 
 	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, 32, -12, 6);

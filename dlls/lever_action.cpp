@@ -1,5 +1,14 @@
-// Half-Life: Sillyfied weapon file
+// Half-Life: Sillyfied Modified TWHL weapon file
 // This file can be used as an template for shotgun based reloading custom weapons
+
+// .40-70 Government Lever Action Rifle
+
+// the durability system
+// when the weapon is picked up the durability is reset
+// every shot causes wear, when there is no more durability.. the weapon is unusable
+// to make the weapon usable again, the player can find the same weapon to repair it or find a weapon repair kit like in 3d fallout games
+
+// durability calculation = ((damage / 10) - (100-(rpm / 10))) + 254
 
 #include "extdll.h"
 #include "util.h"
@@ -18,8 +27,9 @@ void CLeverAction::Spawn()
 	Precache();
 	SET_MODEL(ENT(pev), "models/w_leveraction.mdl");
 	m_iId = WEAPON_LEVERACTION;
-	m_iDefaultAmmo = 4; // How much ammo this weapon has on spawn
-	FallInit();			// get ready to fall down.
+	m_iDefaultAmmo = 64;			// How much ammo this weapon has on spawn
+	m_iSecondaryAmmoType -= 122; // give 166 Durability Points shorterned to DP
+	FallInit();					// get ready to fall down.
 }
 
 void CLeverAction::Precache()
@@ -31,16 +41,16 @@ void CLeverAction::Precache()
 	m_iShell = PRECACHE_MODEL("models/rshell_big.mdl"); // brass shell
 
 	PRECACHE_SOUND("weapons/leveraction.wav");
-	//PRECACHE_SOUND("weapons/la/reload.wav"); no longer needed
+	// PRECACHE_SOUND("weapons/la/reload.wav"); no longer needed
 }
 
 bool CLeverAction::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
 	p->pszAmmo1 = "45-50gov"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 60;	   // What's the max ammo quantity for that kind of ammo
-	p->pszAmmo2 = NULL;
-	p->iMaxAmmo2 = NULL;
+	p->iMaxAmmo1 = 60;		  // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo2 = "DurLeverAction";
+	p->iMaxAmmo2 = 122;
 	p->iMaxClip = 4;  // How many ammo this weapon's clip or magazine has
 	p->iSlot = 5;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
 	p->iPosition = 3; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
@@ -76,11 +86,24 @@ void CLeverAction::PrimaryAttack()
 		return;
 	}
 
-	if (m_iClip <= 0) //out of ammo? time to... wait i am reloaded
+	if (m_iClip <= 0) // out of ammo? time to... wait i am reloaded
 	{
 		Reload();
 		if (m_iClip == 0)
 			PlayEmptySound();
+		return;
+	}
+
+	if (m_iSecondaryAmmoType == 122) // no DP... no shoot....
+	{
+		PlayEmptySound();
+		return;
+	}
+
+	if (m_iSecondaryAmmoType >= 119) // no DP... no shoot....
+	{
+		PlayEmptySound();
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 is now broken. Switch to a different weapon.");
 		return;
 	}
 
@@ -114,6 +137,41 @@ void CLeverAction::PrimaryAttack()
 	// Remove a bullet
 
 	m_iClip--;
+	m_iSecondaryAmmoType++;
+	m_iSecondaryAmmoType++; 
+	m_iSecondaryAmmoType++; 
+	m_iSecondaryAmmoType++; // remove 4 CMD because 80 damage
+
+	// start weapon condition message
+	if (m_iSecondaryAmmoType == 22)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 is starting to show some wear.");
+	}
+	if (m_iSecondaryAmmoType == 42)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 has now 80 CND.");
+	}
+	if (m_iSecondaryAmmoType == 62)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 has now 60 CND.");
+	}
+	if (m_iSecondaryAmmoType == 82)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 has now 40 CND, try to find a replacement weapon or repair your current weapon.");
+	}
+	if (m_iSecondaryAmmoType == 10)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 has now 20 CND, It will malfunction soon, so try to switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 110)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 has now 10 CND, It will malfunction, Switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 122)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Ramlead M1867 is now broken. Switch to a different weapon.");
+	}
+	// end weapon condition messages
 
 	// if (m_iClip != 0)
 	m_flPumpTime = gpGlobals->time + 0.5;
@@ -123,32 +181,12 @@ void CLeverAction::PrimaryAttack()
 	m_fInSpecialReload = 0;
 }
 
-//void CLeverAction::SecondaryAttack() // secondary attack? nuh uh its a reloading button
-//{
-	//if (m_iPrimaryAmmoType == 0) //check if player has actually ammo
-	//{
-	//	return; // no ammo whoopie no reloading for you!
-	//}
 
-	//if (m_iClip == 4) // is the mag tube full?
-	//{
-	//	return; // no more reloading for you!
-	//}
-	
-	
-	//DefaultReload(0, LEVERACTION_RELOAD, 1.3);// alternative option, maybe this stops with the "hold down the button to reload thing"
-	//m_iClip++; //add one bullet to the clip
-	//m_iPrimaryAmmoType--; //remove one bullet from the reserve
-	//m_flNextPrimaryAttack = 1.35; // prevent player from attacking IN the reload
-	//m_flNextSecondaryAttack = 1.35; // prevent player from reloading before the cooldown
-	//SendWeaponAnim(LEVERACTION_RELOAD); // play reload animation
-	//m_fInSpecialReload = 1;
-//}
 
 
 void CLeverAction::Reload()
 {
-	//DefaultReload(1, LEVERACTION_RELOAD, 1.3);
+	// DefaultReload(1, LEVERACTION_RELOAD, 1.3);
 	if (m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType] <= 0 || m_iClip == 4) // checks if the weapon is full, the LA has 4 round cap
 		return;
 
@@ -156,14 +194,14 @@ void CLeverAction::Reload()
 	if (m_flNextPrimaryAttack > UTIL_WeaponTimeBase())
 		return;
 
-	
+
 
 	// check to see if we're ready to reload
 	if (m_fInSpecialReload == 0)
 	{
 		SendWeaponAnim(LEVERACTION_START_RELOAD); // starting position
 		m_fInSpecialReload = 1;
-		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.53; //time to for the weapon to start
+		m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.53; // time to for the weapon to start
 		m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + 0.53;
 		m_flNextPrimaryAttack = GetNextAttackDelay(1.0);
 		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.0;
@@ -176,10 +214,10 @@ void CLeverAction::Reload()
 		// was waiting for gun to move to side
 		m_fInSpecialReload = 2;
 
-	//	if (RANDOM_LONG(0, 1))
-	//		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/la/reload.wav", 1, ATTN_NORM, 0, 85 + RANDOM_LONG(0, 0x1f));
-	//	else
-	//		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/la/reload.wav", 1, ATTN_NORM, 0, 85 + RANDOM_LONG(0, 0x1f)); //we are playing sound in the QC no need to play it here
+		//	if (RANDOM_LONG(0, 1))
+		//		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/la/reload.wav", 1, ATTN_NORM, 0, 85 + RANDOM_LONG(0, 0x1f));
+		//	else
+		//		EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_ITEM, "weapons/la/reload.wav", 1, ATTN_NORM, 0, 85 + RANDOM_LONG(0, 0x1f)); //we are playing sound in the QC no need to play it here
 
 		SendWeaponAnim(LEVERACTION_RELOAD);
 		float m_flNextReload;
@@ -257,5 +295,3 @@ void CLeverAction::WeaponIdle()
 		}
 	}
 }
-
-

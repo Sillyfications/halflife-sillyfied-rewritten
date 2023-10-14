@@ -1,6 +1,7 @@
 /***
 *
 *	Copyright (c) 1996-2001, Valve LLC. All rights reserved.
+*   Modified by Sillyfications! for the Half-Life mod Half-Life: Sillyfied.
 *	
 *	This product contains software technology licensed from Id 
 *	Software, Inc. ("Id Technology").  Id Technology (c) 1996 Id Software, Inc. 
@@ -12,6 +13,19 @@
 *   without written permission from Valve LLC.
 *
 ****/
+
+
+//The Bernett AMS-12 
+//The AMS-12 is a semi-automatic shotgun that has a slow firing speed but high accuracy. Alt fire makes the weapon shoot faster at a lower accuracy.
+//Ammo: 12 GAUGE
+//Damage: 9x8 (72)
+//Firerate: 120 (180 alt fire)
+//Magazine: Tube fed, 5/25
+//DPS: 0-144 (0-216 alt fire)
+//CND: 25 shots before malfunction
+//Accuracy: 4 degrees (6 degrees alt fire)
+//Recoil: 10 upwards, 5 backwards
+
 
 #include "extdll.h"
 #include "util.h"
@@ -33,7 +47,7 @@ void CShotgun::Spawn()
 	Precache();
 	m_iId = WEAPON_SHOTGUN;
 	SET_MODEL(ENT(pev), "models/w_shotgun.mdl");
-
+	m_iSecondaryAmmoType -= 26; // reset CND
 	m_iDefaultAmmo = SHOTGUN_DEFAULT_GIVE;
 
 	FallInit(); // get ready to fall
@@ -71,8 +85,8 @@ bool CShotgun::GetItemInfo(ItemInfo* p)
 	p->pszName = STRING(pev->classname);
 	p->pszAmmo1 = "buckshot";
 	p->iMaxAmmo1 = BUCKSHOT_MAX_CARRY;
-	p->pszAmmo2 = NULL;
-	p->iMaxAmmo2 = -1;
+	p->pszAmmo2 = "CNDShotgun";
+	p->iMaxAmmo2 = 26;
 	p->iMaxClip = SHOTGUN_MAX_CLIP;
 	p->iSlot = 4;
 	p->iPosition = 0;
@@ -108,6 +122,14 @@ void CShotgun::PrimaryAttack()
 		return;
 	}
 
+	if (m_iSecondaryAmmoType == 26) // no DP... no shoot....
+	{
+		PlayEmptySound();
+		return;
+	}
+
+	
+
 	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
 	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
 
@@ -139,7 +161,7 @@ void CShotgun::PrimaryAttack()
 	else
 	{
 		// regular old, untouched spread.
-		vecDir = m_pPlayer->FireBulletsPlayer(9, vecSrc, vecAiming, VECTOR_CONE_4DEGREES, 8196, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed);
+		vecDir = m_pPlayer->FireBulletsPlayer(9, vecSrc, vecAiming, VECTOR_CONE_4DEGREES, 8196, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed); // 9 times 8 = 72 damage
 	}
 
 	PLAYBACK_EVENT_FULL(flags, m_pPlayer->edict(), m_usSingleFire, 0.0, g_vecZero, g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0);
@@ -151,7 +173,38 @@ void CShotgun::PrimaryAttack()
 
 	//if (m_iClip != 0)
 	m_flPumpTime = gpGlobals->time + 0.5;
+	m_iSecondaryAmmoType++; // remove 4 CMD because 72 damage
 
+	// start weapon condition message
+	if (m_iSecondaryAmmoType == 1)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 is starting to show some wear.");
+	}
+	if (m_iSecondaryAmmoType == 6)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 80 CND.");
+	}
+	if (m_iSecondaryAmmoType == 11)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 60 CND.");
+	}
+	if (m_iSecondaryAmmoType == 16)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 40 CND, try to find a replacement weapon or repair your current weapon.");
+	}
+	if (m_iSecondaryAmmoType == 21)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 20 CND, It will malfunction soon, so try to switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 24)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 8 CND, It will malfunction, Switch to a different weapon.");
+	}
+	if (m_iSecondaryAmmoType == 26)
+	{
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 is now broken. Switch to a different weapon.");
+	}
+	// end weapon condition messages
 	m_flNextPrimaryAttack = GetNextAttackDelay(0.50);
 	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.50;
 	if (m_iClip != 0)
@@ -180,6 +233,15 @@ void CShotgun::SecondaryAttack()
 				PlayEmptySound();
 			return;
 		}
+
+		if (m_iSecondaryAmmoType == 26) // no DP... no shoot....
+		{
+			PlayEmptySound();
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 is broken. Switch to a different weapon.");
+			return;
+		}
+
+		
 
 		m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
 		m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
@@ -212,7 +274,7 @@ void CShotgun::SecondaryAttack()
 		else
 		{
 			// regular old, untouched spread.
-			vecDir = m_pPlayer->FireBulletsPlayer(9, vecSrc, vecAiming, VECTOR_CONE_4DEGREES, 8196, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed);
+			vecDir = m_pPlayer->FireBulletsPlayer(9, vecSrc, vecAiming, VECTOR_CONE_6DEGREES, 8196, BULLET_PLAYER_BUCKSHOT, 0, 0, m_pPlayer->pev, m_pPlayer->random_seed);
 		}
 
 		PLAYBACK_EVENT_FULL(flags, m_pPlayer->edict(), m_usSingleFire, 0.0, g_vecZero, g_vecZero, vecDir.x, vecDir.y, 0, 0, 0, 0);
@@ -224,6 +286,38 @@ void CShotgun::SecondaryAttack()
 
 		// if (m_iClip != 0)
 		m_flPumpTime = gpGlobals->time + 0.5;
+		m_iSecondaryAmmoType++; // remove 4 CMD because 72 damage
+
+		// start weapon condition message
+		if (m_iSecondaryAmmoType == 1)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 is starting to show some wear.");
+		}
+		if (m_iSecondaryAmmoType == 6)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 80 CND.");
+		}
+		if (m_iSecondaryAmmoType == 11)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 60 CND.");
+		}
+		if (m_iSecondaryAmmoType == 16)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 40 CND, try to find a replacement weapon or repair your current weapon.");
+		}
+		if (m_iSecondaryAmmoType == 21)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 20 CND, It will malfunction soon, so try to switch to a different weapon.");
+		}
+		if (m_iSecondaryAmmoType == 24)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 has now 8 CND, It will malfunction, Switch to a different weapon.");
+		}
+		if (m_iSecondaryAmmoType == 26)
+		{
+			ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, "Your Bernett AMS-12 is now broken. Switch to a different weapon.");
+		}
+		// end weapon condition messages
 
 		m_flNextPrimaryAttack = GetNextAttackDelay(0.30);
 		m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 0.30;
@@ -372,12 +466,35 @@ class CShotgunAmmo : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		if (pOther->GiveAmmo(AMMO_BUCKSHOTBOX_GIVE, "buckshot", BUCKSHOT_MAX_CARRY) != -1)
+		
+
+		if (pOther->GiveAmmo(3, "buckshot", BUCKSHOT_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			return true;
 		}
-		return false;
+
+		if (pOther->GiveAmmo(2, "4 gauge", 10) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+
+		if (pOther->GiveAmmo(5, "10 gauge", 54) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+
+		if (pOther->GiveAmmo(15, "410", 75) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+
+		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			return true; // adachi true! give ammo!
+		}
+
+		return false; //adachi false.... dont give ammo.....
 	}
 };
 LINK_ENTITY_TO_CLASS(ammo_buckshot, CShotgunAmmo);

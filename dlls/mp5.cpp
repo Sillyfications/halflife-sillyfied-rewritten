@@ -154,7 +154,7 @@ void CMP5::PrimaryAttack()
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", false, 0);
 
-	m_flNextPrimaryAttack = GetNextAttackDelay(0.1);
+	m_flNextPrimaryAttack = GetNextAttackDelay(0.08);
 
 	if (m_flNextPrimaryAttack < UTIL_WeaponTimeBase())
 		m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.08;//750
@@ -269,12 +269,28 @@ class CMP5AmmoClip : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		bool bResult = (pOther->GiveAmmo(AMMO_MP5CLIP_GIVE, "9mm", _9MM_MAX_CARRY) != -1);
-		if (bResult)
+		if (pOther->GiveAmmo(15, "556", 210) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
 		}
-		return bResult;
+		if (pOther->GiveAmmo(20, "762", 200) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(10, "223", 100) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(18, "9mm", _9MM_MAX_CARRY) != -1)
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		}
+		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
+		{
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			return true; // adachi true! give ammo! make item disappear!
+		}
+		return false;
 	}
 };
 LINK_ENTITY_TO_CLASS(ammo_mp5clip, CMP5AmmoClip);

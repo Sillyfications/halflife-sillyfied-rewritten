@@ -77,6 +77,7 @@ CAMR g_AMR;
 CP90 g_P90;
 CLeverAction g_LeverAction;
 CKSG g_KSG;
+CCustomWeaponAmmoHandler g_CustomWeaponAmmoHandler;
 
 
 
@@ -491,7 +492,8 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_P90, &player);
 	HUD_PrepEntity(&g_LeverAction, &player);
 	HUD_PrepEntity(&g_KSG, &player);
-		
+	HUD_PrepEntity(&g_CustomWeaponAmmoHandler, &player);
+	
 }
 
 /*
@@ -666,6 +668,9 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 		pWeapon = &g_KSG;
 		break;
 
+	case WEAPON_CUSTOMWEAPONAMMOHANDLER:
+		pWeapon = &g_CustomWeaponAmmoHandler;
+		break;
 	}
 	
 

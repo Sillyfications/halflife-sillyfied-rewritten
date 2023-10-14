@@ -15,7 +15,7 @@ void CElite::Spawn()
 	Precache();
 	SET_MODEL(ENT(pev), "models/w_elite.mdl");
 	m_iId = WEAPON_ELITE;
-	m_iDefaultAmmo = 30; // How much ammo this weapon has on spawn
+	m_iDefaultAmmo = 100; // How much ammo this weapon has on spawn
 	FallInit();			 // get ready to fall down.
 }
 
@@ -37,7 +37,7 @@ bool CElite::GetItemInfo(ItemInfo* p)
 	p->iMaxAmmo1 = 250;	 // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
-	p->iMaxClip = 50; // How many ammo this weapon's clip or magazine has
+	p->iMaxClip = 30; // How many ammo this weapon's clip or magazine has
 	p->iSlot = 1;	  // Which "slot" (column) in the HUD this weapon is located (2 = same slot as HL1 MP5, shotgun, crossbow)
 	p->iPosition = 2; // Which "position" (row) in the HUD this weapon is located (4 = after quad shotgun)
 	p->iFlags = 0;	  // Special flags this weapon has
@@ -82,7 +82,7 @@ void CElite::PrimaryAttack()
 	Vector vecSrc = m_pPlayer->GetGunPosition();
 	Vector vecAiming = m_pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
 	Vector vecDir = m_pPlayer->FireBulletsPlayer(1, vecSrc, vecAiming, VECTOR_CONE_1DEGREES, 8192, BULLET_PLAYER_BUCKSHOT,
-		1, 4, m_pPlayer->pev, m_pPlayer->random_seed);
+		1, 69, m_pPlayer->pev, m_pPlayer->random_seed);
 
 	// Play view model animation and firing sound
 	SendWeaponAnim(ELITE_SHOOT1 + RANDOM_LONG(0, 2));
@@ -109,7 +109,7 @@ void CElite::PrimaryAttack()
 void CElite::Reload()
 {
 	// Reload 30 bullets, play the AK47_RELOAD animation, reload duration is 2.5 seconds
-	DefaultReload(50, ELITE_RELOAD, 3.5);
+	DefaultReload(30, ELITE_RELOAD, 3);
 }
 
 

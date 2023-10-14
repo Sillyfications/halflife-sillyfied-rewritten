@@ -105,7 +105,7 @@ public:
 #define WEAPON_NOCLIP -1
 
 //#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
-#define GLOCK_MAX_CLIP 17
+#define GLOCK_MAX_CLIP 13
 #define PYTHON_MAX_CLIP 7
 #define MP5_MAX_CLIP 35
 #define MP5_DEFAULT_AMMO 25
@@ -122,12 +122,12 @@ public:
 
 
 // the default amount of ammo that comes with each gun when it spawns
-#define GLOCK_DEFAULT_GIVE 17
+#define GLOCK_DEFAULT_GIVE 10
 #define PYTHON_DEFAULT_GIVE 6
 #define MP5_DEFAULT_GIVE 25
 #define MP5_DEFAULT_AMMO 25
 #define MP5_M203_DEFAULT_GIVE 0
-#define SHOTGUN_DEFAULT_GIVE 12
+#define SHOTGUN_DEFAULT_GIVE 5
 #define CROSSBOW_DEFAULT_GIVE 5
 #define RPG_DEFAULT_GIVE 1
 #define GAUSS_DEFAULT_GIVE 20
@@ -357,6 +357,7 @@ public:
 	int m_iPrimaryAmmoType;		   // "primary" ammo index into players m_rgAmmo[]
 	int m_iSecondaryAmmoType;	   // "secondary" ammo index into players m_rgAmmo[]
 	int m_iClip;				   // number of shots left in the primary weapon clip, -1 it not used
+	int m_iSecondaryClip;			//number of shots left in the secondary weapon clip, used for the repair system and oicw grenades
 	int m_iClientClip;			   // the last version of m_iClip sent to hud dll
 	int m_iClientWeaponState;	   // the last version of the weapon state sent to hud dll (is current weapon, is on target)
 	bool m_fInReload;			   // Are we in the middle of a reload;
@@ -1648,6 +1649,9 @@ class CLeverAction : public CBasePlayerWeapon
 	}
 
 	int m_iShell;
+	int m_ = 1; // condition for the lever action
+	
+	
 };
 
 // anim order
@@ -1666,6 +1670,44 @@ enum ksg_e
 };
 
 class CKSG : public CBasePlayerWeapon
+{
+	void Spawn() override;
+	void Precache() override;
+	// Which "slot" (column) in the HUD this weapon is located
+	int iItemSlot() override { return 3; }
+	bool GetItemInfo(ItemInfo* p) override;
+	void PrimaryAttack() override;
+	void Reload() override;
+	bool Deploy() override;
+	void WeaponIdle() override;
+	bool UseDecrement() override
+	{
+#if defined(CLIENT_WEAPONS)
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	int m_iShell;
+};
+
+
+enum customweaponammohandler_e
+{
+	CUSTOMWEAPONAMMOHANDLER_IDLE = 0,
+	CUSTOMWEAPONAMMOHANDLER_FIRE,
+	CUSTOMWEAPONAMMOHANDLER_FIRE2,
+	CUSTOMWEAPONAMMOHANDLER_RELOAD,
+	CUSTOMWEAPONAMMOHANDLER_PUMP,
+	CUSTOMWEAPONAMMOHANDLER_START_RELOAD,
+	CUSTOMWEAPONAMMOHANDLER_DRAW,
+	CUSTOMWEAPONAMMOHANDLER_HOLSTER,
+	CUSTOMWEAPONAMMOHANDLER_IDLE4,
+	CUSTOMWEAPONAMMOHANDLER_IDLE_DEEP
+};
+
+class CCustomWeaponAmmoHandler : public CBasePlayerWeapon
 {
 	void Spawn() override;
 	void Precache() override;

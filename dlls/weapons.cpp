@@ -361,6 +361,9 @@ void W_Precache()
 	// KSG Shotgun
 	UTIL_PrecacheOtherWeapon("weapon_ksg");
 
+	// Custom Weapon Ammo Handler
+	UTIL_PrecacheOtherWeapon("weapon_customweaponammohandler");
+
 	if (g_pGameRules->IsDeathmatch())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons
