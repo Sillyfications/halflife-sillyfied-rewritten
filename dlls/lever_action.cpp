@@ -1,5 +1,5 @@
 // Half-Life: Sillyfied Modified TWHL weapon file
-// This file can be used as an template for shotgun based reloading custom weapons
+// This file can be used as a template for shotgun based reloading custom weapons
 
 // .40-70 Government Lever Action Rifle
 

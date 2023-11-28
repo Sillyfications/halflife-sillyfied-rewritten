@@ -1261,16 +1261,21 @@ class CFamas : public CBasePlayerWeapon
 	int m_iShell;
 };
 
-// Enumeration of Dual Elite animations in the view model file (v_elite.mdl)
-// Must match the same order as the model itself (look through a model viewer)
+// Enumeration of Akimbo Kriss Vector animations in the viewmodel file (v_elite.mdl)
 enum elite_e
 {
 	ELITE_IDLE,
+	//ELITE_IDLE_EMPTY, //not currently used
 	ELITE_RELOAD,
+	ELITE_RELOAD_EMPTY,
 	ELITE_DRAW,
+	//ELITE_DRAW_EMPTY, //not currently used
 	ELITE_SHOOT1,
 	ELITE_SHOOT2,
-	ELITE_SHOOT3,
+	//ELITE_SHOOT3, //not currently used
+	//ELITE_JAM,	//not currently used
+	ELITE_EXPLODE,
+	//ELITE_HOLSTER //not currently used
 };
 
 // Main weapon class
@@ -1278,10 +1283,10 @@ class CElite : public CBasePlayerWeapon
 {
 	void Spawn() override;
 	void Precache() override;
-	// Which "slot" (column) in the HUD this weapon is located
 	int iItemSlot() override { return 2; }
 	bool GetItemInfo(ItemInfo* p) override;
 	void PrimaryAttack() override;
+	//void SecondaryAttack() override; //not currently used
 	void Reload() override;
 	bool Deploy() override;
 	void WeaponIdle() override;
@@ -1295,6 +1300,14 @@ class CElite : public CBasePlayerWeapon
 	}
 
 	int m_iShell;
+	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES;// default accuracy, changes in the code (custom vector)
+	int m_iRandomDamageCalculator = 0; // this variable will get a number assigned and that number will point to a damage value
+	int m_iWeaponDamageValue = 0; //to make the code look better
+	float m_flForward = 0.0f; //variable value for shell casings (forward) minus for backwards
+	float m_flRight = 0.0f; //variable value for shell casings (right) minus for left
+	float m_flUp = -2.6f; //variable value for shell casings (up) minus for down
+
+
 };
 
 //double barrel shotgun
