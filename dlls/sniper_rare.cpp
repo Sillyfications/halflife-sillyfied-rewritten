@@ -95,7 +95,7 @@ void CSniperRare::PrimaryAttack()
 			PlayEmptySound();
 			m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.2;
 			// send a message to player
-			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "No ammo! Reload!");
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "No ammo!");
 		}
 
 		return;
@@ -199,7 +199,7 @@ void CSniperRare::Reload()
 	if (m_iClip == 0)
 		iResult = DefaultReload(3, SNIPER_RARE_RELOADEMPTY, 3.02);
 	else
-		iResult = DefaultReload(4, SNIPER_RARE_RELOAD, 2.22);
+		iResult = DefaultReload(3, SNIPER_RARE_RELOAD, 2.22);
 
 	if (iResult)
 	{
