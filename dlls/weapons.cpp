@@ -322,8 +322,8 @@ void W_Precache()
 	// hornetgun
 	UTIL_PrecacheOtherWeapon("weapon_hornetgun");
 
-	// Famas
-	UTIL_PrecacheOtherWeapon("weapon_famas");
+	// rare sniper rifle
+	UTIL_PrecacheOtherWeapon("weapon_sniper_rare");
 
 	// Dual Elites
 	UTIL_PrecacheOtherWeapon("weapon_elite");

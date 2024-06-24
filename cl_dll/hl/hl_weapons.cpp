@@ -64,7 +64,7 @@ CHandGrenade g_HandGren;
 CSatchel g_Satchel;
 CTripmine g_Tripmine;
 CSqueak g_Snark;
-CFamas g_Famas;
+CSniperRare g_SniperRare;
 CElite g_Elite;
 CDB g_DB;
 CScout g_Scout;
@@ -479,7 +479,7 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_Satchel, &player);
 	HUD_PrepEntity(&g_Tripmine, &player);
 	HUD_PrepEntity(&g_Snark, &player);
-	HUD_PrepEntity(&g_Famas, &player);
+	HUD_PrepEntity(&g_SniperRare, &player);//evil zone (very evil)-
 	HUD_PrepEntity(&g_Elite, &player);
 	HUD_PrepEntity(&g_DB, &player);
 	HUD_PrepEntity(&g_Scout, &player);
@@ -617,8 +617,8 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 		pWeapon = &g_Snark;
 		break;
 
-	case WEAPON_FAMAS:
-		pWeapon = &g_Famas;
+	case WEAPON_SNIPERRARE:
+		pWeapon = &g_SniperRare;
 		break;
 
 	case WEAPON_ELITE:

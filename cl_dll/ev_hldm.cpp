@@ -1571,6 +1571,84 @@ void EV_SnarkFire(event_args_t* args)
 //	   SQUEAK END
 //======================
 
+//======================
+// SNIPER RARE START
+//======================
+
+enum sniper_rare_e
+{
+	SNIPER_RARE_IDLE1 = 0,
+	SNIPER_RARE_IDLEEMPTY,
+	SNIPER_RARE_SHOOT,
+	SNIPER_RARE_SHOOTLAST,
+	SNIPER_RARE_DRAW,
+	SNIPER_RARE_DRAWEMPTY,
+	SNIPER_RARE_HOLSTER,
+	SNIPER_RARE_HOLSTEREMPTY,
+	SNIPER_RARE_RELOAD,
+	SNIPER_RARE_RELOADEMPTY,
+	SNIPER_RARE_RELOADJAM,
+	// SNIPER_RARE_STARTRELOAD, not a shotgun
+	// SNIPER_RARE_ENDRELOAD,
+	// SNIPER_RARE_ENDRELOADEMPTY,
+	// SNIPER_RARE_ENDRELOADJAM,
+	SNIPER_RARE_SHOOTJAM,
+};
+void EV_FireSniperRare(event_args_t* args)
+{
+	// Just a bunch of variables and boilerplate copy/paste code
+	int idx;
+	Vector origin;
+	Vector angles;
+	Vector velocity;
+	bool empty;
+
+	Vector ShellVelocity;
+	Vector ShellOrigin;
+	int shell;
+	Vector vecSrc, vecAiming;
+	Vector up, right, forward;
+
+	idx = args->entindex;
+	VectorCopy(args->origin, origin);
+	VectorCopy(args->angles, angles);
+	VectorCopy(args->velocity, velocity);
+
+	empty = 0 != args->bparam1;
+	AngleVectors(angles, forward, right, up);
+
+	shell = gEngfuncs.pEventAPI->EV_FindModelIndex("models/rshell_big.mdl"); // brass shell
+
+	// If the entity firing this event is the player
+	if (EV_IsLocal(idx))
+	{
+		// Render a muzzleflash
+		EV_MuzzleFlash();
+
+		// Show the weapon animation (a different one if this was the last bullet in the clip)
+		gEngfuncs.pEventAPI->EV_WeaponAnimation(empty ? SNIPER_RARE_SHOOTLAST : SNIPER_RARE_SHOOT, 0);
+
+		// Apply some recoil to the player's view
+		V_PunchAxis(0, -4.0);
+	}
+
+	// Eject an empty bullet shell (the numbers here are mostly magic, experiment with them or just use whatever, it's not too important)
+	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, -9.0, 14.0, 9.0);
+	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHELL);
+
+	// Play the "shoot" sound
+	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/sniper_rare/rare/fire.wav", gEngfuncs.pfnRandomFloat(0.92, 1), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
+
+	// Fire some bullets (this will do some prediction stuff, show a tracer, play texture sound, and render a decal where the bullet hits)
+	EV_GetGunPosition(args, vecSrc, origin);
+	VectorCopy(forward, vecAiming);
+	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 4096, BULLET_PLAYER_357, 0, 0, args->fparam1, args->fparam2);
+}
+
+//======================
+// SNIPER RARE END
+//======================
+
 void EV_TrainPitchAdjust(event_args_t* args)
 {
 	int idx;

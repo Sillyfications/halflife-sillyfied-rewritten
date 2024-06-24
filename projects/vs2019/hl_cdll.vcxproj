@@ -181,7 +181,6 @@ cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetName).p
     <ClCompile Include="..\..\dlls\deagle.cpp" />
     <ClCompile Include="..\..\dlls\dualelites.cpp" />
     <ClCompile Include="..\..\dlls\egon.cpp" />
-    <ClCompile Include="..\..\dlls\famas.cpp" />
     <ClCompile Include="..\..\dlls\fnv_radio.cpp" />
     <ClCompile Include="..\..\dlls\g36.cpp" />
     <ClCompile Include="..\..\dlls\gauss.cpp" />
@@ -198,6 +197,7 @@ cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetName).p
     <ClCompile Include="..\..\dlls\satchel.cpp" />
     <ClCompile Include="..\..\dlls\scout.cpp" />
     <ClCompile Include="..\..\dlls\shotgun.cpp" />
+    <ClCompile Include="..\..\dlls\sniper_rare.cpp" />
     <ClCompile Include="..\..\dlls\squeakgrenade.cpp" />
     <ClCompile Include="..\..\dlls\tripmine.cpp" />
     <ClCompile Include="..\..\dlls\weapons_shared.cpp" />

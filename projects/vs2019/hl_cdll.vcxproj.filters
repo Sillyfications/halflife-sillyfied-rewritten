@@ -324,9 +324,6 @@
     <ClCompile Include="..\..\cl_dll\particleman\CBaseParticle.cpp">
       <Filter>Source Files\cl_dll\particleman</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\famas.cpp">
-      <Filter>Source Files\_hl\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\dualelites.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
@@ -367,6 +364,9 @@
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\CustomWeaponAmmoHandler.cpp">
+      <Filter>Source Files\_hl\dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\sniper_rare.cpp">
       <Filter>Source Files\_hl\dlls</Filter>
     </ClCompile>
   </ItemGroup>

@@ -85,6 +85,7 @@ public:
 #define SNARK_WEIGHT 5
 #define SATCHEL_WEIGHT -10
 #define TRIPMINE_WEIGHT -10
+#define SNIPERRARE_WEIGHT 10
 
 
 // weapon clip/carry ammo capacities
@@ -119,7 +120,7 @@ public:
 #define SATCHEL_MAX_CLIP WEAPON_NOCLIP
 #define TRIPMINE_MAX_CLIP WEAPON_NOCLIP
 #define SNARK_MAX_CLIP WEAPON_NOCLIP
-
+#define SNIPERRARE_MAX_CLIP 3
 
 // the default amount of ammo that comes with each gun when it spawns
 #define GLOCK_DEFAULT_GIVE 10
@@ -137,6 +138,7 @@ public:
 #define TRIPMINE_DEFAULT_GIVE 1
 #define SNARK_DEFAULT_GIVE 5
 #define HIVEHAND_DEFAULT_GIVE 8
+#define SNIPERRARE_DEFAULT_GIVE 3
 
 // The amount of ammo given to a player by an ammo item.
 #define AMMO_URANIUMBOX_GIVE 20
@@ -1225,31 +1227,24 @@ private:
 	unsigned short m_usSnarkFire;
 };
 
-// Enumeration of Famas animations in the view model file (v_famas.mdl)
-// Must match the same order as the model itself (look through a model viewer)
-enum famas_e
-{
-	FAMAS_IDLE,
-	FAMAS_RELOAD,
-	FAMAS_DRAW,
-	FAMAS_SHOOT1,
-	FAMAS_SHOOT2,
-	FAMAS_SHOOT3,
-};
+//the evil zone aka custom code
 
-// Main weapon class
-class CFamas : public CBasePlayerWeapon
+class CSniperRare : public CBasePlayerWeapon
 {
+public:
 	void Spawn() override;
 	void Precache() override;
-	// Which "slot" (column) in the HUD this weapon is located
 	int iItemSlot() override { return 2; }
 	bool GetItemInfo(ItemInfo* p) override;
+
 	void PrimaryAttack() override;
-	void Reload() override;
+	void SecondaryAttack() override;
 	bool Deploy() override;
+	void Holster() override;
+	void Reload() override;
 	void WeaponIdle() override;
-	bool UseDecrement() override
+
+	virtual bool UseDecrement() override
 	{
 #if defined(CLIENT_WEAPONS)
 		return true;
@@ -1258,7 +1253,8 @@ class CFamas : public CBasePlayerWeapon
 #endif
 	}
 
-	int m_iShell;
+private:
+	unsigned short m_usFireSniperRare;
 };
 
 // Enumeration of Akimbo Kriss Vector animations in the viewmodel file (v_elite.mdl)
