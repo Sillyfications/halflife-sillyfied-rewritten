@@ -70,6 +70,8 @@ bool CSniperRare::GetItemInfo(ItemInfo* p)
 	return true;
 }
 
+
+
 void CSniperRare::SecondaryAttack()
 {
 }
@@ -117,7 +119,16 @@ void CSniperRare::PrimaryAttack()
 	m_pPlayer->m_iWeaponFlash = NORMAL_GUN_FLASH;
 
 	// Decrease the number of bullets in the clip
-	m_iClip--;
+	// but check the +1 first and do not use any bullets
+
+	if (m_bChamber == true) {
+		m_bChamber = false; // we used our bullet soo back to false
+		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 not active\nBack to magazine.");
+	}
+	else {
+		m_iClip--; // use normal ammo
+	}
+	
 
 	// Add a muzzleflash to the player effects
 	m_pPlayer->pev->effects |= EF_MUZZLEFLASH;
@@ -138,7 +149,7 @@ void CSniperRare::PrimaryAttack()
 		VECTOR_CONE_2DEGREES, // The accuracy spread of the weapon
 		8192,				   // The distance the bullet can go (8192 is the limit for the engine)
 		BULLET_PLAYER_357,	   // The type of bullet being fired
-		1,					   // Number of tracer bullets to fire (none in this case)
+		10,					   // Number of tracer bullets to fire (none in this case)
 		0,					   // Set to non-zero to override the amount of damage (usually, leave this as 0)
 		m_pPlayer->pev,		   // Attacker entity
 		m_pPlayer->random_seed // The random seed
@@ -176,6 +187,7 @@ bool CSniperRare::Deploy()
 		"crossbow",						// 3rd person animation
 		pev->body						// body pointer
 	);
+
 }
 
 void CSniperRare::Holster()
@@ -183,6 +195,12 @@ void CSniperRare::Holster()
 	m_fInReload = false; //cancel reload
 
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5; // edge i mean delay the weapon so it can play the holster animation
+
+	if (m_bChamber = true) { //check if player has the +1 buff
+		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]++; //refund the round
+		m_bChamber = false;
+		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Refunded 1 heavy ammo.");
+	}
 
 	SendWeaponAnim(SNIPER_RARE_HOLSTER);
 }
@@ -192,14 +210,31 @@ void CSniperRare::Reload()
 	// Don't reload if the player doesn't have any ammo
 	if (m_pPlayer->ammo_bolts <= 0)
 		return;
+	if (m_iClip == 3)
+		return;
 
 	int iResult;
 
 	// The view model has two different animations depending on if there are any bullets in the clip
 	if (m_iClip == 0)
+	{
 		iResult = DefaultReload(3, SNIPER_RARE_RELOADEMPTY, 3.02);
+	}
 	else
+	{
+
+
+		if (m_pPlayer->ammo_bolts > 5)
+		{
+			m_bChamber = true;
+			m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;
+			
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 active");
+		}
+
 		iResult = DefaultReload(3, SNIPER_RARE_RELOAD, 2.22);
+	}
+		
 
 	if (iResult)
 	{

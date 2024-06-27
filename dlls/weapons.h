@@ -1236,7 +1236,6 @@ public:
 	void Precache() override;
 	int iItemSlot() override { return 2; }
 	bool GetItemInfo(ItemInfo* p) override;
-
 	void PrimaryAttack() override;
 	void SecondaryAttack() override;
 	bool Deploy() override;
@@ -1252,6 +1251,8 @@ public:
 		return false;
 #endif
 	}
+
+	bool m_bChamber = false; //do we have +1 in magazine?
 
 private:
 	unsigned short m_usFireSniperRare;
