@@ -184,9 +184,10 @@ bool CSniperRare::Deploy()
 		"models/weapons/sniper/v_sniper_r.mdl", // weapon viewmodel
 		"models/weapons/sniper/p_sniper_r.mdl", // world viewmodel
 		SNIPER_RARE_DRAW,				// play the draw animation
-		"crossbow",						// 3rd person animation
+		"bow",						// 3rd person animation
 		pev->body						// body pointer
 	);
+	m_bChamber = false; // tell game to not start with putting +1
 
 }
 
@@ -196,7 +197,7 @@ void CSniperRare::Holster()
 
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5; // edge i mean delay the weapon so it can play the holster animation
 
-	if (m_bChamber = true) { //check if player has the +1 buff
+	if (m_bChamber == true) { //check if player has the +1 buff
 		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]++; //refund the round
 		m_bChamber = false;
 		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Refunded 1 heavy ammo.");
@@ -231,8 +232,12 @@ void CSniperRare::Reload()
 			
 			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 active");
 		}
+		else {
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 disabled\nLow reserve.");
+		}
 
 		iResult = DefaultReload(3, SNIPER_RARE_RELOAD, 2.22);
+
 	}
 		
 
