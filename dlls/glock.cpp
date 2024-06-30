@@ -81,7 +81,7 @@ bool CGlock::Deploy()
 
 void CGlock::SecondaryAttack()
 {
-	return;
+	
 }
 
 void CGlock::PrimaryAttack()
@@ -99,6 +99,13 @@ void CGlock::GlockFire(float flSpread, float flCycleTime, bool fUseAutoAim)
 			m_flNextPrimaryAttack = GetNextAttackDelay(0.2);
 		}
 
+		return;
+	}
+
+	//semi auto firing
+	//if m1 is in attack, dont do anything
+	if (m_pPlayer->m_afButtonLast & IN_ATTACK)
+	{
 		return;
 	}
 
