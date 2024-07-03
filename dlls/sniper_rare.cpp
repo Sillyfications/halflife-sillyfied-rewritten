@@ -113,6 +113,24 @@ void CSniperRare::PrimaryAttack()
 
 	}
 
+	// calculate recoil (used for low rpm weapons)
+	if (m_pPlayer->pev->velocity.Length2D() < 160) // are we moving at 160 hammer units?
+	{
+		m_VecInaccuracy = VECTOR_CONE_4DEGREES; // max inaccuracy
+	}
+	else if (!(m_pPlayer->pev->flags & FL_ONGROUND)) // are we standing?
+	{
+		m_VecInaccuracy = VECTOR_CONE_6DEGREES; // medium inaccuracy
+	}
+	else if (m_pPlayer->pev->flags & FL_DUCKING) // are we ducking?
+	{
+		m_VecInaccuracy = VECTOR_CONE_2DEGREES; // minimal inaccuracy
+	}
+	else // are we jumping or falling?
+	{
+		m_VecInaccuracy = VECTOR_CONE_15DEGREES; // make the gun very inaccurate
+	}
+
 	// If we get to this point - we're shooting!
 
 	m_pPlayer->m_iWeaponVolume = NORMAL_GUN_VOLUME;
@@ -146,7 +164,7 @@ void CSniperRare::PrimaryAttack()
 		1,					   // Number of bullets to shoot
 		vecSrc,				   // The source of the bullets (i.e. the gun)
 		vecAiming,			   // The direction to fire in (i.e. where the player is pointing)
-		VECTOR_CONE_2DEGREES, // The accuracy spread of the weapon
+		m_VecInaccuracy,	   // The accuracy spread of the weapon
 		8192,				   // The distance the bullet can go (8192 is the limit for the engine)
 		BULLET_PLAYER_357,	   // The type of bullet being fired
 		10,					   // Number of tracer bullets to fire (none in this case)

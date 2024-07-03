@@ -519,6 +519,7 @@ public:
 
 private:
 	int m_iShell;
+	
 
 
 	unsigned short m_usFireGlock1;
@@ -1253,6 +1254,7 @@ public:
 	}
 
 	bool m_bChamber = false; //do we have +1 in magazine?
+	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES; // default accuracy, changes in the code (custom vector)
 
 private:
 	unsigned short m_usFireSniperRare;
