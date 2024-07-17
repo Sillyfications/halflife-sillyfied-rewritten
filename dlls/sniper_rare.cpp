@@ -96,8 +96,16 @@ void CSniperRare::PrimaryAttack()
 			// just play the empty "click" sound until the player releases the button.
 			PlayEmptySound();
 			m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.2;
-			// send a message to player
-			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "No ammo!");
+			
+			//check if player has weapon messages enabled
+			float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+			if (msg >= 1) {
+				// send a message to player
+				ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "No ammo!");
+			}
+
+			
 		}
 
 		return;
@@ -108,8 +116,16 @@ void CSniperRare::PrimaryAttack()
 	{
 		//play sound
 		EMIT_SOUND(edict(), CHAN_AUTO, "weapons/ui/ammolow.wav", 1, ATTN_NORM);
-		//send a message to player
-		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Ammo low! Reload!");
+		
+
+		// check if player has weapon messages enabled
+		float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+		if (msg >= 1)
+		{
+			// send a message to player
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Ammo low! Reload!");
+		}
 
 	}
 
@@ -141,7 +157,15 @@ void CSniperRare::PrimaryAttack()
 
 	if (m_bChamber == true) {
 		m_bChamber = false; // we used our bullet soo back to false
-		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 not active\nBack to magazine.");
+
+		// check if player has weapon messages enabled
+		float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+		if (msg >= 1)
+		{
+			// send a message to player
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 not active\nBack to magazine.");
+		}
 	}
 	else {
 		m_iClip--; // use normal ammo
@@ -220,7 +244,15 @@ void CSniperRare::Holster()
 	if (m_bChamber == true) { //check if player has the +1 buff
 		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]++; //refund the round
 		m_bChamber = false;
-		ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Refunded 1 heavy ammo.");
+
+		// check if player has weapon messages enabled
+		float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+		if (msg >= 1)
+		{
+			// send a message to player
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Refunded 1 heavy ammo.");
+		}
 	}
 
 	SendWeaponAnim(SNIPER_RARE_HOLSTER);
@@ -249,11 +281,27 @@ void CSniperRare::Reload()
 		{
 			m_bChamber = true;
 			m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]--;
-			
-			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 active");
+
+			// check if player has weapon messages enabled
+			float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+			if (msg >= 1)
+			{
+				// send a message to player
+
+				ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 active");
+			}
 		}
 		else {
-			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 disabled\nLow reserve.");
+
+			// check if player has weapon messages enabled
+			float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+			if (msg >= 1)
+			{
+				// send a message to player
+				ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "+1 disabled\nLow reserve.");
+			}
 		}
 
 		iResult = DefaultReload(3, SNIPER_RARE_RELOAD, 2.22);

@@ -174,9 +174,18 @@ void VectorInverse(float* v);
 
 inline void UnpackRGB(int& r, int& g, int& b, unsigned long ulRGB)
 {
-	r = (ulRGB & 0xFF0000) >> 16;
-	g = (ulRGB & 0xFF00) >> 8;
-	b = ulRGB & 0xFF;
+	if (ulRGB == RGB_YELLOWISH)
+	{
+		r = CVAR_GET_FLOAT("sillyfied_hud_red");
+		g = CVAR_GET_FLOAT("sillyfied_hud_green");
+		b = CVAR_GET_FLOAT("sillyfied_hud_blue");
+	}
+	else
+	{
+		r = (ulRGB & 0xFF0000) >> 16;
+		g = (ulRGB & 0xFF00) >> 8;
+		b = ulRGB & 0xFF;
+	}
 }
 
 HSPRITE LoadSprite(const char* pszName);
