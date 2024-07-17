@@ -809,7 +809,7 @@ void CBasePlayer::Killed(entvars_t* pevAttacker, int iGib)
 	MESSAGE_BEGIN(MSG_ONE, gmsgCurWeapon, NULL, pev);
 	WRITE_BYTE(0);
 	WRITE_BYTE(0XFF);
-	WRITE_BYTE(0xFF);
+	WRITE_SHORT(0xFF);
 	MESSAGE_END();
 
 	// reset FOV
@@ -1343,7 +1343,7 @@ void CBasePlayer::StartObserver(Vector vecPosition, Vector vecViewAngle)
 	MESSAGE_BEGIN(MSG_ONE, gmsgCurWeapon, NULL, pev);
 	WRITE_BYTE(0);
 	WRITE_BYTE(0XFF);
-	WRITE_BYTE(0xFF);
+	WRITE_SHORT(0xFF);
 	MESSAGE_END();
 
 	// reset FOV
@@ -3921,12 +3921,12 @@ void CBasePlayer::InternalSendSingleAmmoUpdate(int ammoIndex)
 		m_rgAmmoLast[ammoIndex] = m_rgAmmo[ammoIndex];
 
 		ASSERT(m_rgAmmo[ammoIndex] >= 0);
-		ASSERT(m_rgAmmo[ammoIndex] < 255);
+		ASSERT(m_rgAmmo[ammoIndex] < 999);
 
 		// send "Ammo" update message
 		MESSAGE_BEGIN(MSG_ONE, gmsgAmmoX, NULL, pev);
-		WRITE_BYTE(ammoIndex);
-		WRITE_BYTE(V_max(V_min(m_rgAmmo[ammoIndex], 254), 0)); // clamp the value to one byte
+		WRITE_SHORT(ammoIndex);
+		WRITE_SHORT(V_max(V_min(m_rgAmmo[ammoIndex], 999), 0)); // clamp the value to one byte, NOPE! we are not doing that! max value is now 999	
 		MESSAGE_END();
 	}
 }
@@ -4204,7 +4204,7 @@ void CBasePlayer::UpdateClientData()
 		MESSAGE_BEGIN(MSG_ONE, gmsgCurWeapon, NULL, pev);
 		WRITE_BYTE(0);
 		WRITE_BYTE(0);
-		WRITE_BYTE(0);
+		WRITE_SHORT(0);
 		MESSAGE_END();
 	}
 

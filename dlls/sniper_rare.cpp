@@ -57,7 +57,7 @@ bool CSniperRare::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname); //match classes so the engine can load hud elements
 	p->pszAmmo1 = "bolts"; // ammo type (bolts mean heavy ammo)
-	p->iMaxAmmo1 = 50; //amount of max ammo
+	p->iMaxAmmo1 = BOLT_MAX_CARRY;		 // amount of max ammo
 	p->pszAmmo2 = NULL; //secondary ammo? (aka durablity in game)
 	p->iMaxAmmo2 = NULL; //max 2nd ammo
 	p->iMaxClip = 3; // ammo in mag
@@ -206,6 +206,8 @@ bool CSniperRare::Deploy()
 		pev->body						// body pointer
 	);
 	m_bChamber = false; // tell game to not start with putting +1
+	
+	
 
 }
 

@@ -66,8 +66,8 @@ void CElite::Precache()
 bool CElite::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "22"; // Which ammo type this weapon use 
-	p->iMaxAmmo1 = 170;	 // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = "9mm"; // Which ammo type this weapon use 
+	p->iMaxAmmo1 = _9MM_MAX_CARRY;	 // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = "VectorCND";
 	p->iMaxAmmo2 = 101;
 	p->iMaxClip = 34; // How many ammo this weapon's clip or magazine has

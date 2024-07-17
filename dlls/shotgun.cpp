@@ -466,35 +466,14 @@ class CShotgunAmmo : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		
 
-		if (pOther->GiveAmmo(3, "buckshot", BUCKSHOT_MAX_CARRY) != -1)
+		if (pOther->GiveAmmo(AMMO_BUCKSHOTBOX_GIVE, "buckshot", BUCKSHOT_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			ClientPrint(pOther->pev, HUD_PRINTTALK, "Picked up buckshots and slugs.\n");
+			return true;
 		}
-
-		if (pOther->GiveAmmo(2, "4 gauge", 10) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-
-		if (pOther->GiveAmmo(5, "10 gauge", 54) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-
-		if (pOther->GiveAmmo(15, "410", 75) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-
-		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			return true; // adachi true! give ammo!
-		}
-
-		return false; //adachi false.... dont give ammo.....
+		return false;
 	}
 };
 LINK_ENTITY_TO_CLASS(ammo_buckshot, CShotgunAmmo);

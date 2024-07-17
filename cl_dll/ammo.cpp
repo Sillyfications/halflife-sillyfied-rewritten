@@ -484,8 +484,8 @@ bool CHudAmmo::MsgFunc_AmmoX(const char* pszName, int iSize, void* pbuf)
 {
 	BEGIN_READ(pbuf, iSize);
 
-	int iIndex = READ_BYTE();
-	int iCount = READ_BYTE();
+	int iIndex = READ_SHORT();
+	int iCount = READ_SHORT();
 
 	gWR.SetAmmo(iIndex, abs(iCount));
 
@@ -565,7 +565,7 @@ bool CHudAmmo::MsgFunc_CurWeapon(const char* pszName, int iSize, void* pbuf)
 
 	int iState = READ_BYTE();
 	int iId = READ_CHAR();
-	int iClip = READ_CHAR();
+	int iClip = READ_SHORT();
 
 	// detect if we're also on target
 	if (iState > 1)

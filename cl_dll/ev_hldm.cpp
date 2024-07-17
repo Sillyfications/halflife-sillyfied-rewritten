@@ -936,7 +936,7 @@ void EV_FireGauss(event_args_t* args)
 
 			if (n < 0.5) // 60 degrees
 			{
-				// ALERT( at_console, "reflect %f\n", n );
+				ALERT( at_console, "reflect %f\n", n );
 				// reflect
 				Vector r;
 
@@ -1639,10 +1639,13 @@ void EV_FireSniperRare(event_args_t* args)
 	// Play the "shoot" sound
 	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/sniper_rare/rare/fire.wav", gEngfuncs.pfnRandomFloat(0.92, 1), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
 
+	
+
 	// Fire some bullets (this will do some prediction stuff, show a tracer, play texture sound, and render a decal where the bullet hits)
 	EV_GetGunPosition(args, vecSrc, origin);
 	VectorCopy(forward, vecAiming);
 	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 4096, BULLET_PLAYER_357, 0, 0, args->fparam1, args->fparam2);
+	
 }
 
 //======================

@@ -46,8 +46,8 @@ void CDB::Precache()
 bool CDB::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "4 gauge";		   // its a shotgun, of course 12G
-	p->iMaxAmmo1 = 10; // 125
+	p->pszAmmo1 = "buckshot";		   // its a shotgun, of course 12G
+	p->iMaxAmmo1 = BUCKSHOT_MAX_CARRY; // 125
 	p->pszAmmo2 = "CNDDbarrel";
 	p->iMaxAmmo2 = 27;
 	p->iMaxClip = 2;			  // 2 barrels

@@ -702,6 +702,8 @@ void CWorld::Precache()
 	CVAR_SET_STRING("rpc_chapter", m_iszChapter ? STRING(m_iszChapter) : "");
 	CVAR_SET_STRING("rpc_area", m_iszArea ? STRING(m_iszArea) : "");
 	CVAR_SET_STRING("rpc_image", m_iszImage ? STRING(m_iszImage) : "");
+
+	ALERT(at_notice, "This build may contain errors and is subject to change in the future. - Project Sillyfied Server Build[VER 0.0.10]\n"); // dont forget to increment this
 }
 
 

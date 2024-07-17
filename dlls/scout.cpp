@@ -33,8 +33,8 @@ void CScout::Precache()
 bool CScout::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "308"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 50;	  // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = "357"; // Which ammo type this weapon use
+	p->iMaxAmmo1 = _357_MAX_CARRY;	  // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = NULL;
 	p->iMaxAmmo2 = NULL;
 	p->iMaxClip = 10; // How many ammo this weapon's clip or magazine has

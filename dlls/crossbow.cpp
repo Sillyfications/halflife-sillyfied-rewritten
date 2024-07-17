@@ -508,20 +508,7 @@ class CCrossbowAmmo : public CBasePlayerAmmo
 		if (pOther->GiveAmmo(AMMO_CROSSBOWCLIP_GIVE, "bolts", BOLT_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			
-		}
-		if (pOther->GiveAmmo(2, "45-50gov", 60) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-			
-		}
-		if (pOther->GiveAmmo(1, "50bmg", 21) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			ClientPrint(pOther->pev, HUD_PRINTTALK, "Picked up heavy ammo.\n"); //pother here
 			return true; // adachi true! give ammo! make item disappear!
 		}
 		return false;

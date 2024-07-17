@@ -89,12 +89,12 @@ public:
 
 
 // weapon clip/carry ammo capacities
-#define URANIUM_MAX_CARRY 200
-#define _9MM_MAX_CARRY 156
-#define _357_MAX_CARRY 48
-#define BUCKSHOT_MAX_CARRY 49
-#define BOLT_MAX_CARRY 35
-#define ROCKET_MAX_CARRY 10
+#define URANIUM_MAX_CARRY 300 //energy ammo
+#define _9MM_MAX_CARRY 600 //light ammo
+#define _357_MAX_CARRY 400 //medium ammo
+#define BUCKSHOT_MAX_CARRY 120 //buckshot and slugs
+#define BOLT_MAX_CARRY 100 //heavy ammo
+#define ROCKET_MAX_CARRY 15 //explosive ammo
 #define HANDGRENADE_MAX_CARRY 10
 #define SATCHEL_MAX_CARRY 5
 #define TRIPMINE_MAX_CARRY 5
@@ -141,16 +141,16 @@ public:
 #define SNIPERRARE_DEFAULT_GIVE 3
 
 // The amount of ammo given to a player by an ammo item.
-#define AMMO_URANIUMBOX_GIVE 20
-#define AMMO_GLOCKCLIP_GIVE 8
-#define AMMO_357BOX_GIVE 5
-#define AMMO_MP5CLIP_GIVE 17
+#define AMMO_URANIUMBOX_GIVE 50
+#define AMMO_GLOCKCLIP_GIVE 20
+#define AMMO_357BOX_GIVE 40
+#define AMMO_MP5CLIP_GIVE 60
 #define AMMO_CHAINBOX_GIVE 200
 #define AMMO_M203BOX_GIVE 2
-#define AMMO_BUCKSHOTBOX_GIVE 6
-#define AMMO_CROSSBOWCLIP_GIVE 3
+#define AMMO_BUCKSHOTBOX_GIVE 12
+#define AMMO_CROSSBOWCLIP_GIVE 10
 #define AMMO_RPGCLIP_GIVE RPG_MAX_CLIP
-#define AMMO_URANIUMBOX_GIVE 20
+#define AMMO_URANIUMBOX_GIVE 50
 #define AMMO_SNARKBOX_GIVE 5
 
 // bullet types
@@ -519,6 +519,10 @@ public:
 
 private:
 	int m_iShell;
+	int m_iInaccuracyValue = 0; // amount of inaccuracy to make the gun inaccurate (1000) is max
+	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES; // default accuracy, changes in the code (custom vector)
+	float m_flRechargeTime = 2.0; // time for inaccuracy to reduce
+
 	
 
 

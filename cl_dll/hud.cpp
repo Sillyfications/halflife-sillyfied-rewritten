@@ -371,6 +371,7 @@ void CHud::Init()
 
 	m_Menu.Init();
 
+
 	MsgFunc_ResetHUD(0, 0, NULL);
 }
 
@@ -513,6 +514,8 @@ void CHud::VidInit()
 	m_TextMessage.VidInit();
 	m_StatusIcons.VidInit();
 	GetClientVoiceMgr()->VidInit();
+
+	gEngfuncs.Con_Printf("This build may contain errors and is subject to change in the future. - Project Sillyfied Client Build[VER 0.0.10]\n"); // dont forget to increment this
 }
 
 bool CHud::MsgFunc_Logo(const char* pszName, int iSize, void* pbuf)

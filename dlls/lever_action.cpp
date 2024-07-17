@@ -47,8 +47,8 @@ void CLeverAction::Precache()
 bool CLeverAction::GetItemInfo(ItemInfo* p)
 {
 	p->pszName = STRING(pev->classname);
-	p->pszAmmo1 = "45-50gov"; // Which ammo type this weapon use
-	p->iMaxAmmo1 = 60;		  // What's the max ammo quantity for that kind of ammo
+	p->pszAmmo1 = "bolts"; // Which ammo type this weapon use
+	p->iMaxAmmo1 = BOLT_MAX_CARRY;		  // What's the max ammo quantity for that kind of ammo
 	p->pszAmmo2 = "DurLeverAction";
 	p->iMaxAmmo2 = 122;
 	p->iMaxClip = 4;  // How many ammo this weapon's clip or magazine has

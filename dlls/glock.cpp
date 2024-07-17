@@ -76,6 +76,7 @@ bool CGlock::GetItemInfo(ItemInfo* p)
 bool CGlock::Deploy()
 {
 	// pev->body = 1;
+	m_iInaccuracyValue = 250; //start inaccuracy with 25%
 	return DefaultDeploy("models/v_9mmhandgun.mdl", "models/p_9mmhandgun.mdl", GLOCK_DRAW, "onehanded");
 }
 
@@ -112,6 +113,12 @@ void CGlock::GlockFire(float flSpread, float flCycleTime, bool fUseAutoAim)
 	
 
 	m_iClip--;
+	if (m_iInaccuracyValue >= 1000) {
+		ClientPrint(m_pPlayer->pev, HUD_PRINTCONSOLE, "Debug: m_iInaccuracyValue of Rare Pistol is: " + m_iInaccuracyValue);
+	}
+	else {
+		m_iInaccuracyValue = m_iInaccuracyValue + 40;//add inaccuracy every shot
+	}
 
 	m_pPlayer->pev->effects = (int)(m_pPlayer->pev->effects) | EF_MUZZLEFLASH;
 
@@ -174,9 +181,17 @@ void CGlock::Reload()
 	bool iResult;
 
 	if (m_iClip == 0)
+	{
 		iResult = DefaultReload(13, GLOCK_RELOAD, 2.7);
+		m_iInaccuracyValue = 0; // destroy any inaccuracy
+		ALERT(at_notice, "Reloading!");
+	}
 	else
+	{
 		iResult = DefaultReload(13, GLOCK_RELOAD_NOT_EMPTY, 2.7);
+		m_iInaccuracyValue = 0; // destroy any inaccuracy
+		ALERT(at_notice, "Reloading!");
+	}
 
 	if (iResult)
 	{
@@ -189,6 +204,17 @@ void CGlock::Reload()
 void CGlock::WeaponIdle()
 {
 	ResetEmptySound();
+
+	while (m_iInaccuracyValue > 0 && m_flRechargeTime > gpGlobals->time) //reduce the inaccuracy when idling
+	{
+		if (m_iInaccuracyValue == 0) {
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCONSOLE, "Debug: Rare Pistol has reached m_iInaccuracyValue of zero.\n");
+		}
+		else {
+			m_iInaccuracyValue--;
+		}
+		
+	}
 
 	m_pPlayer->GetAutoaimVector(AUTOAIM_10DEGREES);
 
@@ -237,21 +263,10 @@ class CGlockAmmo : public CBasePlayerAmmo
 	}
 	bool AddAmmo(CBaseEntity* pOther) override
 	{
-		if (pOther->GiveAmmo(8, "9mm", _9MM_MAX_CARRY) != -1)
+		if (pOther->GiveAmmo(AMMO_GLOCKCLIP_GIVE, "9mm", _9MM_MAX_CARRY) != -1)
 		{
 			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-		if (pOther->GiveAmmo(25, "57", 150) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-		if (pOther->GiveAmmo(17, "22", 170) != -1)
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
-		}
-		if (pOther->GiveAmmo(1, "custom weapon ammo handler", 999) != -1) // the ammo handler isnt used for any weapon. this fixes the infinite ammo glitch
-		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			ClientPrint(pOther->pev, HUD_PRINTTALK, "Picked up light ammo.\n");
 			return true; // adachi true! give ammo! make item disappear!
 		}
 		return false;
