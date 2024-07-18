@@ -65,18 +65,6 @@ CSatchel g_Satchel;
 CTripmine g_Tripmine;
 CSqueak g_Snark;
 CSniperRare g_SniperRare;
-CElite g_Elite;
-CDB g_DB;
-CScout g_Scout;
-CDeagle g_Deagle;
-CRadio g_Radio;
-CM16 g_M16;
-CG3 g_G3;
-CG36 g_G36;
-CAMR g_AMR;
-CP90 g_P90;
-CLeverAction g_LeverAction;
-CKSG g_KSG;
 CCustomWeaponAmmoHandler g_CustomWeaponAmmoHandler;
 
 
@@ -480,19 +468,7 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&g_Satchel, &player);
 	HUD_PrepEntity(&g_Tripmine, &player);
 	HUD_PrepEntity(&g_Snark, &player);
-	HUD_PrepEntity(&g_SniperRare, &player);//evil zone (very evil)-
-	HUD_PrepEntity(&g_Elite, &player);
-	HUD_PrepEntity(&g_DB, &player);
-	HUD_PrepEntity(&g_Scout, &player);
-	HUD_PrepEntity(&g_Deagle, &player);
-	HUD_PrepEntity(&g_Radio, &player);
-	HUD_PrepEntity(&g_M16, &player);
-	HUD_PrepEntity(&g_G3, &player);
-	HUD_PrepEntity(&g_G36, &player);
-	HUD_PrepEntity(&g_AMR, &player);
-	HUD_PrepEntity(&g_P90, &player);
-	HUD_PrepEntity(&g_LeverAction, &player);
-	HUD_PrepEntity(&g_KSG, &player);
+	HUD_PrepEntity(&g_SniperRare, &player);//evil zone (very evil)
 	HUD_PrepEntity(&g_CustomWeaponAmmoHandler, &player);
 	
 }
@@ -620,53 +596,6 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 
 	case WEAPON_SNIPERRARE:
 		pWeapon = &g_SniperRare;
-		break;
-
-	case WEAPON_ELITE:
-		pWeapon = &g_Elite;
-		break;
-
-	case WEAPON_DBARREL:
-		pWeapon = &g_DB;
-		break;
-
-	case WEAPON_SCOUT:
-		pWeapon = &g_Scout;
-		break;
-
-	case WEAPON_DEAGLE:
-		pWeapon = &g_Deagle;
-		break;
-
-	case WEAPON_RADIO:
-		pWeapon = &g_Radio;
-		break;
-
-	case WEAPON_M16:
-		pWeapon = &g_M16;
-		break;
-
-	case WEAPON_G3:
-		pWeapon = &g_G3;
-		break;
-	case WEAPON_G36:
-		pWeapon = &g_G36;
-		break;
-
-	case WEAPON_AMR:
-		pWeapon = &g_AMR;
-		break;
-
-	case WEAPON_P90:
-		pWeapon = &g_P90;
-		break;
-
-	case WEAPON_LEVERACTION:
-		pWeapon = &g_LeverAction;
-		break;
-
-	case WEAPON_KSG:
-		pWeapon = &g_KSG;
 		break;
 
 	case WEAPON_CUSTOMWEAPONAMMOHANDLER:

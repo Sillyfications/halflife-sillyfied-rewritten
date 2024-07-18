@@ -366,42 +366,6 @@
     <ClCompile Include="..\..\public\interface.cpp">
       <Filter>Source Files\public</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\dualelites.cpp">
-      <Filter>Header Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\dbarrel.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\scout.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\deagle.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\fnv_radio.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\m16.cpp">
-      <Filter>Header Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\hk_g3.cpp">
-      <Filter>Header Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\g36.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\anti_mat_rifle.cpp">
-      <Filter>Header Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\p90.cpp">
-      <Filter>Header Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\lever_action.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\ksg.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\CustomWeaponAmmoHandler.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>

@@ -32,6 +32,7 @@ void InterpolateAngles(float* start, float* end, float* output, float frac);
 void NormalizeAngles(float* angles);
 float Distance(const float* v1, const float* v2);
 float AngleBetweenVectors(const float* v1, const float* v2);
+float g_fMaxViewModelLag = 1.5f; //viewmodel lag
 
 extern float vJumpOrigin[3];
 extern float vJumpAngles[3];
@@ -547,6 +548,8 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 	gEngfuncs.V_CalcShake();
 	gEngfuncs.V_ApplyShake(pparams->vieworg, pparams->viewangles, 1.0);
 
+	
+
 	// never let view origin sit exactly on a node line, because a water plane can
 	// dissapear when viewed with the eye exactly on it.
 	// FIXME, we send origin at 1/128 now, change this?
@@ -667,6 +670,10 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 
 	// Let the viewmodel shake at about 10% of the amplitude
 	gEngfuncs.V_ApplyShake(view->origin, view->angles, 0.9);
+	//CalcViewLag(pparams);
+	
+
+
 
 	for (i = 0; i < 3; i++)
 	{
@@ -859,6 +866,62 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 	lasttime = pparams->time;
 
 	v_origin = pparams->vieworg;
+}
+
+void V_CalcViewLag(struct ref_params_s* pparams){
+	auto view = gEngfuncs.GetViewModel();
+	static Vector m_vecLastFacing = g_vecZero;
+
+	Vector angles = pparams->cl_viewangles;
+	Vector vOriginalOrigin = view->origin;
+	Vector vOriginalAngles = angles;
+
+	// Calculate our drift
+	Vector forward;
+	AngleVectors(angles, forward, NULL, NULL);
+
+	if (pparams->frametime != 0.0f)
+	{
+		Vector vDifference;
+		VectorSubtract(forward, m_vecLastFacing, vDifference);
+
+		float flSpeed = 5.0f;
+
+		// If we start to lag too far behind, we'll increase the "catch up" speed.  Solves the problem with fast cl_yawspeed, m_yaw or joysticks
+		//  rotating quickly.  The old code would slam lastfacing with origin causing the viewmodel to pop to a new position
+		float flDiff = vDifference.Length();
+		if ((flDiff > g_fMaxViewModelLag) && (g_fMaxViewModelLag > 0.0f))
+		{
+			float flScale = flDiff / g_fMaxViewModelLag;
+			flSpeed *= flScale;
+		}
+
+		// FIXME:  Needs to be predictable?
+		VectorMA(m_vecLastFacing, flSpeed * pparams->frametime, vDifference, m_vecLastFacing);
+		// Make sure it doesn't grow out of control!!!
+		VectorNormalize(m_vecLastFacing);
+		VectorMA(view->origin, 5.0f, vDifference * -1.0f, view->origin);
+	}
+
+	Vector right, up;
+	AngleVectors(angles, forward, right, up);
+
+	float pitch = angles[PITCH];
+	if (pitch > 180.0f)
+		pitch -= 360.0f;
+	else if (pitch < -180.0f)
+		pitch += 360.0f;
+
+	if (g_fMaxViewModelLag == 0.0f)
+	{
+		view->origin = vOriginalOrigin;
+		angles = vOriginalAngles;
+	}
+
+	// FIXME: These are the old settings that caused too many exposed polys on some models
+	VectorMA(view->origin, -pitch * 0.035f, forward, view->origin);
+	VectorMA(view->origin, -pitch * 0.03f, right, view->origin);
+	VectorMA(view->origin, -pitch * 0.02f, up, view->origin);
 }
 
 void V_SmoothInterpolateAngles(float* startAngle, float* endAngle, float* finalAngle, float degreesPerSec)

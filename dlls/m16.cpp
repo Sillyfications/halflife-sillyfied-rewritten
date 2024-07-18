@@ -73,6 +73,13 @@ void CM16::PrimaryAttack()
 		m_flNextPrimaryAttack = 0.15;
 		return;
 	}
+	// semi auto firing
+	// if m1 is in attack, dont do anything
+	if (m_pPlayer->m_afButtonLast & IN_ATTACK)
+	{
+		return;
+	}
+
 
 	// Size of the muzzle flash and how much volume in the world the firing sound produces
 	m_pPlayer->m_iWeaponVolume = NORMAL_GUN_VOLUME;
@@ -104,7 +111,7 @@ void CM16::PrimaryAttack()
 	// Remove a bullet
 	m_iClip--;
 	// Next time for attack and weapon idling
-	m_flNextPrimaryAttack = 0.2; 
+	m_flNextPrimaryAttack = 0.001; 
 	m_flTimeWeaponIdle = 4;
 }
 

@@ -33,7 +33,7 @@ void CSniperRare::Spawn()
 	Precache(); //cache the weapon so the engine can find the weapon
 	m_iId = WEAPON_SNIPERRARE; //name for weapons.h definitions
 	SET_MODEL(ENT(pev), "models/weapons/sniper/w_sniper_r.mdl");//set world model for the weapon
-	m_iDefaultAmmo = 3;// how many rounds is the weapong going to give?
+	m_iDefaultAmmo = 3;// how many rounds is the weapon going to give?
 	FallInit();// let gravity do its thing
 }
 
@@ -74,6 +74,17 @@ bool CSniperRare::GetItemInfo(ItemInfo* p)
 
 void CSniperRare::SecondaryAttack()
 {
+	if (m_pPlayer->m_iFOV != 0)
+	{
+		m_pPlayer->m_iFOV = 0; // 0 means reset to default fov
+	}
+	else if (m_pPlayer->m_iFOV != 20)
+	{
+		m_pPlayer->m_iFOV = 20;
+	}
+
+	pev->nextthink = UTIL_WeaponTimeBase() + 0.1;
+	m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.0;
 }
 
 void CSniperRare::PrimaryAttack()
@@ -129,22 +140,14 @@ void CSniperRare::PrimaryAttack()
 
 	}
 
-	// calculate recoil (used for low rpm weapons)
-	if (m_pPlayer->pev->velocity.Length2D() < 160) // are we moving at 160 hammer units?
+	// calculate recoil (used for sniper weapons)
+	if (m_pPlayer->m_iFOV == 20) // are we scoped in
 	{
-		m_VecInaccuracy = VECTOR_CONE_4DEGREES; // max inaccuracy
+		m_VecInaccuracy = VECTOR_CONE_2DEGREES; // max accuracy
 	}
-	else if (!(m_pPlayer->pev->flags & FL_ONGROUND)) // are we standing?
+	else // are we not?
 	{
-		m_VecInaccuracy = VECTOR_CONE_6DEGREES; // medium inaccuracy
-	}
-	else if (m_pPlayer->pev->flags & FL_DUCKING) // are we ducking?
-	{
-		m_VecInaccuracy = VECTOR_CONE_2DEGREES; // minimal inaccuracy
-	}
-	else // are we jumping or falling?
-	{
-		m_VecInaccuracy = VECTOR_CONE_15DEGREES; // make the gun very inaccurate
+		m_VecInaccuracy = VECTOR_CONE_10DEGREES; // make the gun inaccurate
 	}
 
 	// If we get to this point - we're shooting!
@@ -213,6 +216,11 @@ void CSniperRare::PrimaryAttack()
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", false, 0);
 	}
 
+	if (m_pPlayer->m_iFOV != 0)
+	{
+		SecondaryAttack();
+	}
+
 	// The desert eagle can fire quite quickly with no laser spot, so use a 250ms delay
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.68;
 
@@ -240,6 +248,11 @@ void CSniperRare::Holster()
 	m_fInReload = false; //cancel reload
 
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 0.5; // edge i mean delay the weapon so it can play the holster animation
+
+	if (m_pPlayer->m_iFOV != 0)
+	{
+		SecondaryAttack();
+	}
 
 	if (m_bChamber == true) { //check if player has the +1 buff
 		m_pPlayer->m_rgAmmo[m_iPrimaryAmmoType]++; //refund the round
