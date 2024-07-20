@@ -3,6 +3,7 @@
 #include "cbase.h"
 #include "weapons.h"
 #include "player.h"
+#include "saverestore.h"
 
 // These correspond directly to the sequences in the weapon's view model
 enum sniper_rare_e
@@ -27,6 +28,9 @@ enum sniper_rare_e
 
 LINK_ENTITY_TO_CLASS(weapon_sniper_rare, CSniperRare)
 
+
+
+
 void CSniperRare::Spawn()
 {
 	pev->classname = MAKE_STRING("weapon_sniper_rare"); //entity name for references and for console
@@ -34,6 +38,7 @@ void CSniperRare::Spawn()
 	m_iId = WEAPON_SNIPERRARE; //name for weapons.h definitions
 	SET_MODEL(ENT(pev), "models/weapons/sniper/w_sniper_r.mdl");//set world model for the weapon
 	m_iDefaultAmmo = 3;// how many rounds is the weapon going to give?
+	m_iSecondaryAmmoType = m_iCNDMinValue;						// reset CND
 	FallInit();// let gravity do its thing
 }
 
@@ -58,8 +63,8 @@ bool CSniperRare::GetItemInfo(ItemInfo* p)
 	p->pszName = STRING(pev->classname); //match classes so the engine can load hud elements
 	p->pszAmmo1 = "bolts"; // ammo type (bolts mean heavy ammo)
 	p->iMaxAmmo1 = BOLT_MAX_CARRY;		 // amount of max ammo
-	p->pszAmmo2 = NULL; //secondary ammo? (aka durablity in game)
-	p->iMaxAmmo2 = NULL; //max 2nd ammo
+	p->pszAmmo2 = "CNDRareSniper";			   // secondary ammo? (aka durablity in game)
+	p->iMaxAmmo2 = m_iCNDMinValue;		 // max 2nd ammo
 	p->iMaxClip = 3; // ammo in mag
 	p->iSlot = 5;	  // hud slot
 	p->iPosition = 2; // row slot
@@ -107,20 +112,33 @@ void CSniperRare::PrimaryAttack()
 			// just play the empty "click" sound until the player releases the button.
 			PlayEmptySound();
 			m_flNextPrimaryAttack = UTIL_WeaponTimeBase() + 0.2;
-			
-			//check if player has weapon messages enabled
+
+			// check if player has weapon messages enabled
 			float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
 
-			if (msg >= 1) {
+			if (msg >= 1)
+			{
 				// send a message to player
 				ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "No ammo!");
 			}
-
-			
 		}
 
 		return;
 	}
+
+	//check if the player can fire
+	if (m_iSecondaryAmmoType == 0) {
+		// check if player has weapon messages enabled
+		float msg = CVAR_GET_FLOAT("sillyfied_hud_show_wpn_center");
+
+		if (msg >= 1)
+		{
+			// send a message to player
+			ClientPrint(m_pPlayer->pev, HUD_PRINTCENTER, "Out of CND!");
+		}
+		return;
+	}
+
 
 	//check if the weapon has less than 33% of ammo and add the ammo count by one
 	if (m_iClip == 1 + 1)
@@ -139,6 +157,65 @@ void CSniperRare::PrimaryAttack()
 		}
 
 	}
+
+	// calculate if the weapon is going to jam
+	if (m_iSecondaryAmmoType >= 0)
+	{
+		int m_iSavedCNDValue = m_iSecondaryAmmoType - 26; // put the value to a seperate var
+		int m_iSaveCNDMax = m_iCNDMinValue - 26;		  // not to fuck up
+		float m_flHalfedCND = m_iSaveCNDMax / 2;		  // 20
+		float m_flQuarteredCND = (m_iSaveCNDMax / 4) * 3; // 30
+		float m_flEightedCND = (m_iSaveCNDMax / 8) * 7;	  // 35
+		int m_iRandomNumber = RANDOM_LONG(1, 20);
+
+		if (m_iSavedCNDValue < m_flHalfedCND)
+		{ // when CND is above 50%, do not jam
+			m_bJamWeapon = false;
+			m_bJamWeaponReload = false;
+		}
+		else if (m_iSavedCNDValue <= m_flQuarteredCND && m_iSavedCNDValue >= m_flHalfedCND)
+		{ // when CND is between 25 to 50%
+
+			if (m_iRandomNumber == 20)
+			{						 // 5 percent chance to jam
+				m_bJamWeapon = true; // jam the weapon unlucky you
+			}
+			if (m_iRandomNumber > 18)
+			{							   // 10 percent chance to jam
+				m_bJamWeaponReload = true; // jam the weapon while reloading
+			}
+		}
+		else if (m_iSavedCNDValue <= m_flEightedCND && m_iSavedCNDValue >= m_flQuarteredCND) // when CND is between 12 to 24%
+		{
+
+			if (m_iRandomNumber > 18) // 10 percent chance to jam
+			{
+				m_bJamWeapon = true; // jam the weapon unlucky you
+			}
+			if (m_iRandomNumber > 16)
+			{							   // 20 percent chance to jam
+				m_bJamWeaponReload = true; // jam the weapon while reloading
+			}
+		}
+		else if (m_iSavedCNDValue <= 0 && m_iSavedCNDValue >= m_flEightedCND) // when CND is between 0 to 11%
+		{
+
+			if (m_iRandomNumber > 15) // 25 percent chance to jam
+			{
+				m_bJamWeapon = true; // jam the weapon unlucky you
+			}
+			if (m_iRandomNumber > 10)
+			{							   // 50 percent chance to jam
+				m_bJamWeaponReload = true; // jam the weapon while reloading
+			}
+		}
+		else if (m_iSavedCNDValue == m_iSaveCNDMax) // do we no longer have CND?
+		{
+			m_bJamWeapon = true;
+			m_bJamWeaponReload = true;
+		}
+	}
+
 
 	// calculate recoil (used for sniper weapons)
 	if (m_pPlayer->m_iFOV == 20) // are we scoped in
@@ -175,6 +252,22 @@ void CSniperRare::PrimaryAttack()
 	}
 	
 
+	m_iSecondaryAmmoType++;
+
+	// check if player has weapon messages enabled
+	float msg5 = CVAR_GET_FLOAT("sillyfied_weapon_show_cdn_debug");
+
+	if (msg5 == 1)
+	{
+		// send a message to player in console
+		ClientPrint(m_pPlayer->pev, HUD_PRINTCONSOLE, m_iSecondaryAmmoType + "CND \n");
+	}
+	else if (msg5 == 2)
+	{
+		// send a message to player in chat
+		ClientPrint(m_pPlayer->pev, HUD_PRINTTALK, m_iSecondaryAmmoType + "CND \n");
+	}
+
 	// Add a muzzleflash to the player effects
 	m_pPlayer->pev->effects |= EF_MUZZLEFLASH;
 
@@ -195,7 +288,7 @@ void CSniperRare::PrimaryAttack()
 		8192,				   // The distance the bullet can go (8192 is the limit for the engine)
 		BULLET_PLAYER_357,	   // The type of bullet being fired
 		10,					   // Number of tracer bullets to fire (none in this case)
-		0,					   // Set to non-zero to override the amount of damage (usually, leave this as 0)
+		59,					   // Set to non-zero to override the amount of damage (usually, leave this as 0)
 		m_pPlayer->pev,		   // Attacker entity
 		m_pPlayer->random_seed // The random seed
 	);
@@ -222,7 +315,13 @@ void CSniperRare::PrimaryAttack()
 	}
 
 	// The desert eagle can fire quite quickly with no laser spot, so use a 250ms delay
-	m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.68;
+	if (m_bJamWeapon == true) {
+		m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 3.55;
+	}
+	else {
+		m_flNextPrimaryAttack = m_flNextSecondaryAttack = UTIL_WeaponTimeBase() + 1.68;
+	}
+	
 
 	// Set the time until the weapon should start idling again
 	m_flTimeWeaponIdle = UTIL_WeaponTimeBase() + UTIL_SharedRandomFloat(m_pPlayer->random_seed, 10, 15);
@@ -284,7 +383,14 @@ void CSniperRare::Reload()
 	// The view model has two different animations depending on if there are any bullets in the clip
 	if (m_iClip == 0)
 	{
-		iResult = DefaultReload(3, SNIPER_RARE_RELOADEMPTY, 3.02);
+		if (m_bJamWeaponReload == true) {
+			iResult = DefaultReload(3, SNIPER_RARE_RELOADEMPTY, 5.26);
+		}
+		else
+		{
+			iResult = DefaultReload(3, SNIPER_RARE_RELOADEMPTY, 3.02);
+		}
+		
 	}
 	else
 	{

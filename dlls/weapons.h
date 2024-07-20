@@ -1259,6 +1259,10 @@ public:
 
 	bool m_bChamber = false; //do we have +1 in magazine?
 	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES; // default accuracy, changes in the code (custom vector)
+	bool m_bJamWeapon = false; //are we going to jam the weapon?
+	bool m_bJamWeaponReload = false; // are we going to jam the weapon during the reload? this uses a different value since reloading has 2 times the chance to jam
+	int m_iCNDMaxValue = 66;//sets the max amount of cnd here
+	int m_iCNDMinValue = 26;// sets the min amount of cnd here, for whatever reason values below 26 dont WORK this will be always 26
 
 private:
 	unsigned short m_usFireSniperRare;
@@ -1306,6 +1310,7 @@ class CElite : public CBasePlayerWeapon
 	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES;// default accuracy, changes in the code (custom vector)
 	int m_iRandomDamageCalculator = 0; // this variable will get a number assigned and that number will point to a damage value
 	int m_iWeaponDamageValue = 0; //to make the code look better
+
 	float m_flForward = 0.0f; //variable value for shell casings (forward) minus for backwards
 	float m_flRight = 0.0f; //variable value for shell casings (right) minus for left
 	float m_flUp = -2.6f; //variable value for shell casings (up) minus for down

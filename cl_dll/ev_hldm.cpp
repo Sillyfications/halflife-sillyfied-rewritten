@@ -1625,8 +1625,17 @@ void EV_FireSniperRare(event_args_t* args)
 		// Render a muzzleflash
 		EV_MuzzleFlash();
 
+		CSniperRare sniperrare;
+
 		// Show the weapon animation (a different one if this was the last bullet in the clip)
-		gEngfuncs.pEventAPI->EV_WeaponAnimation(empty ? SNIPER_RARE_SHOOTLAST : SNIPER_RARE_SHOOT, 0);
+		if (sniperrare.m_bJamWeapon == true) {
+			gEngfuncs.pEventAPI->EV_WeaponAnimation(SNIPER_RARE_SHOOTJAM, 0);
+		}
+		else
+		{
+			gEngfuncs.pEventAPI->EV_WeaponAnimation(empty ? SNIPER_RARE_SHOOTLAST : SNIPER_RARE_SHOOT, 0);
+		}
+		
 
 		// Apply some recoil to the player's view
 		V_PunchAxis(0, -4.0);
