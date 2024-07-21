@@ -326,6 +326,7 @@ void CHud::Init()
 	CVAR_CREATE("sillyfied_hud_show_wpn_chat", "1", FCVAR_ARCHIVE);
 	CVAR_CREATE("sillyfied_hud_show_wpn_center", "1", FCVAR_ARCHIVE);
 	CVAR_CREATE("sillyfied_weapon_show_cdn_debug", "0", FCVAR_ARCHIVE);
+	CVAR_CREATE("sillyfied_weapon_cnd", "1", FCVAR_ARCHIVE);
 
 
 	m_iLogo = 0;

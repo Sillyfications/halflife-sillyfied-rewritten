@@ -1261,8 +1261,10 @@ public:
 	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES; // default accuracy, changes in the code (custom vector)
 	bool m_bJamWeapon = false; //are we going to jam the weapon?
 	bool m_bJamWeaponReload = false; // are we going to jam the weapon during the reload? this uses a different value since reloading has 2 times the chance to jam
-	int m_iCNDMaxValue = 66;//sets the max amount of cnd here
-	int m_iCNDMinValue = 26;// sets the min amount of cnd here, for whatever reason values below 26 dont WORK this will be always 26
+	int m_iCNDMaxValue = 1500;//CND threshold
+	int m_iCNDStoredValue = 0;	// stored CND values
+	int m_iWeaponDamage = 59; //weapon damage
+	
 
 private:
 	unsigned short m_usFireSniperRare;
