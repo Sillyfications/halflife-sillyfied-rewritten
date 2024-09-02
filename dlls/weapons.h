@@ -15,6 +15,7 @@
 
 #pragma once
 
+
 #include "effects.h"
 #include "weaponinfo.h"
 
@@ -1261,13 +1262,18 @@ public:
 	Vector m_VecInaccuracy = VECTOR_CONE_1DEGREES; // default accuracy, changes in the code (custom vector)
 	bool m_bJamWeapon = false; //are we going to jam the weapon?
 	bool m_bJamWeaponReload = false; // are we going to jam the weapon during the reload? this uses a different value since reloading has 2 times the chance to jam
-	int m_iCNDMaxValue = 1500;//CND threshold
+	int m_iCNDMaxValue = 1500;//CND threshold for reloads
 	int m_iCNDStoredValue = 0;	// stored CND values
 	int m_iWeaponDamage = 59; //weapon damage
+	int m_iCNDFiredShots = 0;	// weapon damage
+
+	float m_flFemaleViewmodels = CVAR_GET_FLOAT("sillyfied_female_viewmodels");
+	
 	
 
 private:
 	unsigned short m_usFireSniperRare;
+	unsigned short m_usFireSniperRareJam;
 };
 
 // Enumeration of Akimbo Kriss Vector animations in the viewmodel file (v_elite.mdl)

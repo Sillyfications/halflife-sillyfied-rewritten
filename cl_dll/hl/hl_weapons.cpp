@@ -64,7 +64,7 @@ CHandGrenade g_HandGren;
 CSatchel g_Satchel;
 CTripmine g_Tripmine;
 CSqueak g_Snark;
-CSniperRare g_SniperRare;
+//CSniperRare g_SniperRare;
 CCustomWeaponAmmoHandler g_CustomWeaponAmmoHandler;
 
 

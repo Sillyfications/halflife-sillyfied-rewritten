@@ -144,6 +144,13 @@ void CPython::PrimaryAttack()
 		return;
 	}
 
+	// semi auto firing
+	// if m1 is in attack, dont do anything
+	if (m_pPlayer->m_afButtonLast & IN_ATTACK)
+	{
+		return;
+	}
+
 	m_pPlayer->m_iWeaponVolume = LOUD_GUN_VOLUME;
 	m_pPlayer->m_iWeaponFlash = BRIGHT_GUN_FLASH;
 
@@ -176,7 +183,7 @@ void CPython::PrimaryAttack()
 		// HEV suit - indicate out of ammo condition
 		m_pPlayer->SetSuitUpdate("!HEV_AMO0", false, 0);
 
-	m_flNextPrimaryAttack = 0.75;
+	m_flNextPrimaryAttack = 0.001;
 	m_flTimeWeaponIdle = UTIL_SharedRandomFloat(m_pPlayer->random_seed, 10, 15);
 }
 

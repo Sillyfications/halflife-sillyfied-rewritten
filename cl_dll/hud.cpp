@@ -320,13 +320,17 @@ void CHud::Init()
 
 	CVAR_CREATE("hud_classautokill", "1", FCVAR_ARCHIVE | FCVAR_USERINFO); // controls whether or not to suicide immediately on TF class switch
 	CVAR_CREATE("hud_takesshots", "0", FCVAR_ARCHIVE);					   // controls whether or not to automatically take screenshots at the end of a round
-	CVAR_CREATE("sillyfied_hud_red", "255", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_hud_green", "255", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_hud_blue", "255", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_hud_show_wpn_chat", "1", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_hud_show_wpn_center", "1", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_weapon_show_cdn_debug", "0", FCVAR_ARCHIVE);
-	CVAR_CREATE("sillyfied_weapon_cnd", "1", FCVAR_ARCHIVE);
+	CVAR_CREATE("sillyfied_hud_red", "255", FCVAR_ARCHIVE); //HUD red color
+	CVAR_CREATE("sillyfied_hud_green", "255", FCVAR_ARCHIVE); //HUD green color
+	CVAR_CREATE("sillyfied_hud_blue", "255", FCVAR_ARCHIVE); //HUD blue color
+	CVAR_CREATE("sillyfied_hud_show_wpn_chat", "1", FCVAR_ARCHIVE); //show weapon status in chat
+	CVAR_CREATE("sillyfied_hud_show_wpn_center", "1", FCVAR_ARCHIVE); //show weapon status in console
+	CVAR_CREATE("sillyfied_weapon_show_cdn_debug", "0", FCVAR_ARCHIVE); //show weapon CND debug status in console
+	CVAR_CREATE("sillyfied_weapon_cnd", "1", FCVAR_ARCHIVE); //enable CND
+	CVAR_CREATE("sillyfied_weapon_rng", "1", FCVAR_ARCHIVE); //enable RNG
+	CVAR_CREATE("sillyfied_weapon_show_damage", "0", FCVAR_ARCHIVE); //show weapon RNG debug status in console
+	CVAR_CREATE("sillyfied_female_viewmodels", "0", FCVAR_ARCHIVE); // allow user to switch to female viewmodels
+	CVAR_CREATE("sillyfied_allow_debug_messages", "0", FCVAR_ARCHIVE);	 // show debug messages?
 
 
 	m_iLogo = 0;

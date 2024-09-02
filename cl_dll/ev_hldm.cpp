@@ -53,6 +53,8 @@ void VectorAngles(const float* forward, float* angles);
 
 extern cvar_t* cl_lw;
 
+
+
 // play a strike sound based on the texture that was hit by the attack traceline.  VecSrc/VecEnd are the
 // original traceline endpoints used by the attacker, iBulletType is the type of bullet that hit the texture.
 // returns volume of strike instrument (crowbar) to play
@@ -1624,21 +1626,14 @@ void EV_FireSniperRare(event_args_t* args)
 	{
 		// Render a muzzleflash
 		EV_MuzzleFlash();
-
-		CSniperRare sniperrare;
-
-		// Show the weapon animation (a different one if this was the last bullet in the clip)
-		if (sniperrare.m_bJamWeapon == true) {
-			gEngfuncs.pEventAPI->EV_WeaponAnimation(SNIPER_RARE_SHOOTJAM, 0);
-		}
-		else
-		{
-			gEngfuncs.pEventAPI->EV_WeaponAnimation(empty ? SNIPER_RARE_SHOOTLAST : SNIPER_RARE_SHOOT, 0);
-		}
+		
+		gEngfuncs.pEventAPI->EV_WeaponAnimation(empty ? SNIPER_RARE_SHOOTLAST : SNIPER_RARE_SHOOT, 0);
+		
 		
 
 		// Apply some recoil to the player's view
 		V_PunchAxis(0, -4.0);
+		
 	}
 
 	// Eject an empty bullet shell (the numbers here are mostly magic, experiment with them or just use whatever, it's not too important)
@@ -1655,6 +1650,57 @@ void EV_FireSniperRare(event_args_t* args)
 	VectorCopy(forward, vecAiming);
 	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 4096, BULLET_PLAYER_357, 0, 0, args->fparam1, args->fparam2);
 	
+}
+
+void EV_FireSniperRareJam(event_args_t* args)
+{
+	// Just a bunch of variables and boilerplate copy/paste code
+	int idx;
+	Vector origin;
+	Vector angles;
+	Vector velocity;
+	bool empty;
+
+	Vector ShellVelocity;
+	Vector ShellOrigin;
+	int shell;
+	Vector vecSrc, vecAiming;
+	Vector up, right, forward;
+
+	idx = args->entindex;
+	VectorCopy(args->origin, origin);
+	VectorCopy(args->angles, angles);
+	VectorCopy(args->velocity, velocity);
+
+	empty = 0 != args->bparam1;
+	AngleVectors(angles, forward, right, up);
+
+	shell = gEngfuncs.pEventAPI->EV_FindModelIndex("models/rshell_big.mdl"); // brass shell
+
+	// If the entity firing this event is the player
+	if (EV_IsLocal(idx))
+	{
+		// Render a muzzleflash
+		EV_MuzzleFlash();
+		gEngfuncs.pEventAPI->EV_WeaponAnimation(SNIPER_RARE_SHOOTJAM, 0);
+		// Apply some recoil to the player's view
+		V_PunchAxis(0, -4.0);
+		
+	}
+
+	// Eject an empty bullet shell (the numbers here are mostly magic, experiment with them or just use whatever, it's not too important)
+	EV_GetDefaultShellInfo(args, origin, velocity, ShellVelocity, ShellOrigin, forward, right, up, -9.0, 14.0, 9.0);
+	EV_EjectBrass(ShellOrigin, ShellVelocity, angles[YAW], shell, TE_BOUNCE_SHELL);
+
+	// Play the "shoot" sound
+	gEngfuncs.pEventAPI->EV_PlaySound(idx, origin, CHAN_WEAPON, "weapons/sniper_rare/rare/fire.wav", gEngfuncs.pfnRandomFloat(0.92, 1), ATTN_NORM, 0, 98 + gEngfuncs.pfnRandomLong(0, 3));
+
+
+
+	// Fire some bullets (this will do some prediction stuff, show a tracer, play texture sound, and render a decal where the bullet hits)
+	EV_GetGunPosition(args, vecSrc, origin);
+	VectorCopy(forward, vecAiming);
+	EV_HLDM_FireBullets(idx, forward, right, up, 1, vecSrc, vecAiming, 4096, BULLET_PLAYER_357, 0, 0, args->fparam1, args->fparam2);
 }
 
 //======================
